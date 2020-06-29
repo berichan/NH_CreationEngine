@@ -20,7 +20,7 @@ namespace NH_CreationEngine
             //ShowNMTFile();
 
             foreach (string k in PathHelper.Languages.Keys)
-                ItemCreationEngine.CreateItemList(k);
+                ItemCreationEngine.CreateBodyFabricColorPartsList(k);
         }
 
         // Example functions

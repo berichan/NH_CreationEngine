@@ -90,5 +90,13 @@ namespace NH_CreationEngine
         public static string GetItemRemakeDirectory(string lang) => GetItemDirectory(lang, "Remake");
         public static string GetOutfitColorDirectory(string lang) => GetItemDirectory(lang, "Outfit") + Path.DirectorySeparatorChar + "GroupColor";
         public static string GetOutfiteNameDirectory(string lang) => GetItemDirectory(lang, "Outfit") + Path.DirectorySeparatorChar + "GroupName";
+        // villager names
+        public static string GetVillagerNameItem(string lang) => GetItemDirectory(lang, "Npc") + Path.DirectorySeparatorChar + "STR_NNpcName.msbt";
+        public static string GetVillagerNPCNameItem(string lang) => GetItemDirectory(lang, "Npc") + Path.DirectorySeparatorChar + "STR_SNpcName.msbt";
+        // body + fabric
+        public static string GetBodyColorNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_BodyColor.msbt";
+        public static string GetBodyPartsNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_BodyParts.msbt";
+        public static string GetFabricColorNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_FabricColor.msbt";
+        public static string GetFabricPartsNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_FabricParts.msbt";
     }
 }

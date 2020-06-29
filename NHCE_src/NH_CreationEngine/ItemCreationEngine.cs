@@ -9,7 +9,7 @@ namespace NH_CreationEngine
 {
     public static class ItemCreationEngine
     {
-        private static char[][] knownJunkData = new char[][]
+        private static readonly char[][] knownJunkData = new char[][]
         {
             new char[] { (char)0x000E, (char)0x0032, (char)0x000A, (char)0x0010, (char)0x0006, (char)0x0064, (char)0x0065, (char)0x0020, (char)0x0006, (char)0x0064, (char)0x0027, (char)0x2060, (char)0x000E, (char)0x006E, (char)0x001E, (char)0x0000 }, // fr
             new char[] { (char)0x000A, '\0', '\0', '\0', (char)0x0002, (char)0x0073 }, // de
@@ -23,7 +23,57 @@ namespace NH_CreationEngine
             new char[] { (char)0x000E, '\0', '\0', '\0', (char)0x0006, (char)0x0073, (char)0x0065, (char)0x0073 },
         };
 
+        private const string bodyColorRootName = "text_body_color_";
+        private const string bodyPartsRootName = "text_body_parts_";
+        private const string fabricColorRootName = "text_fabric_color_";
+        private const string fabricPartsRootName = "text_fabric_parts_";
         private const string itemListRootName = "text_item_";
+        private const string villagerListRootName = "text_villager_";
+
+        public static void CreateBodyFabricColorPartsList(string language)
+        {
+            MSBT[] loadedMSBTs = new MSBT[4]
+            {
+                TableProcessor.LoadMSBT(PathHelper.GetBodyColorNameItem(PathHelper.Languages[language])),
+                TableProcessor.LoadMSBT(PathHelper.GetBodyPartsNameItem(PathHelper.Languages[language])),
+                TableProcessor.LoadMSBT(PathHelper.GetFabricColorNameItem(PathHelper.Languages[language])),
+                TableProcessor.LoadMSBT(PathHelper.GetFabricPartsNameItem(PathHelper.Languages[language]))
+            };
+            int[][] separators = new int[][] // how much of a string we want between two separators in the msbt. "_" in this case 
+            {
+                new int [] {1, 2},
+                new int [] {1},
+                new int [] {1, 2},
+                new int [] {1}
+            };
+            string[] filenames = new string[4] { bodyColorRootName, bodyPartsRootName, fabricColorRootName, fabricPartsRootName };
+
+            for (int i = 0; i < loadedMSBTs.Length; ++i)
+            {
+                MSBT loaded = loadedMSBTs[i];
+                List<string> entries = createTabbedLabelList(loaded, language, "\t", separators[i]);
+                entries.Sort();
+                WriteOutFile(PathHelper.OutputPath, language, filenames[i] + language + ".txt", string.Join("", entries));
+            }
+        }
+        public static void CreateVillagerList(string language)
+        {
+            MSBT[] loadedMSBTs = new MSBT[2]
+            {
+                TableProcessor.LoadMSBT(PathHelper.GetVillagerNameItem(PathHelper.Languages[language])),
+                TableProcessor.LoadMSBT(PathHelper.GetVillagerNPCNameItem(PathHelper.Languages[language]))
+            };
+
+            List<string> rawEntries = new List<string>();
+            foreach (MSBT loaded in loadedMSBTs)
+            {
+                List<string> entries = createTabbedLabelList(loaded, language);
+                entries.Sort();
+                rawEntries.AddRange(entries);
+            }
+
+            WriteOutFile(PathHelper.OutputPath, language, villagerListRootName + language + ".txt", string.Join("", rawEntries));
+        }
         public static void CreateItemList(string language)
         {
             string rootPath = PathHelper.GetItemDirectory(PathHelper.Languages[language]);
@@ -142,6 +192,36 @@ namespace NH_CreationEngine
             }
 
             return toRet;
+        }
+
+        //int array should be value of 2 (first and last) and we'll attach the two values
+        private static List<string> createTabbedLabelList(MSBT loaded, string language = "en", string space = "\t", int[] splitEntry = null)
+        {
+            List<string> entries = new List<string>();
+            for (int i = 0; i < loaded.LBL1.Labels.Count; ++i)
+            {
+                entries.Add(createTabbedLabel(loaded, i, language, space, splitEntry));
+            }
+            return entries;
+        }
+
+        private static string createTabbedLabel(MSBT loaded, int entry, string language = "en", string space = "\t", int[] splitEntry = null)
+        {
+            string keyLabel = loaded.LBL1.Labels[entry].ToString();
+            string villagerName = loaded.FileEncoding.GetString(loaded.LBL1.Labels[entry].Value);
+            string toUseAsKey = keyLabel;
+            if (splitEntry != null)
+            {
+                string[] tmpSplit = keyLabel.Split('_');
+                string tmp;
+                if (splitEntry.Length == 1)
+                    tmp = tmpSplit[splitEntry[0]];
+                else
+                    tmp = tmpSplit[splitEntry[0]] + "_" + tmpSplit[splitEntry[1]];
+
+                toUseAsKey = tmp;
+            }
+            return toUseAsKey + space + villagerName.processString(toUseAsKey, language, PathHelper.LangPadAmount[language]) + "\r\n";
         }
 
         private static string processString(this string ItemName, string key, string language = "en", int padAmount = 0)

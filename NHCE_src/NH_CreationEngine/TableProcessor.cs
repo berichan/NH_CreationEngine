@@ -52,6 +52,8 @@ namespace NH_CreationEngine
             return dt;
         }
 
+        public static MSBT LoadMSBT(string path) => MSBTHelper.AttemptLoadFile(path);
+
         public static Dictionary<string, MSBT> LoadAllMSBTs_GiveNames(string rootPath)
         {
             string[] items = Directory.GetFiles(rootPath);
@@ -60,7 +62,7 @@ namespace NH_CreationEngine
 
             for (int i = 0; i < msbtItems.Length; ++i)
             {
-                msbts[i] = MSBTHelper.AttemptLoadFile(msbtItems[i]);
+                msbts[i] = LoadMSBT(msbtItems[i]);
             }
 
             Dictionary<string, MSBT> toReturn = new Dictionary<string, MSBT>();
