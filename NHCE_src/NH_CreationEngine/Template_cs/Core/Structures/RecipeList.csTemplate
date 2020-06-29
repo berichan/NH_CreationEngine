@@ -1,0 +1,12 @@
+﻿using System.Collections.Generic;
+
+namespace NHSE.Core
+{
+    public static class RecipeList
+    {
+        public static readonly IReadOnlyDictionary<ushort, ushort> Recipes = new Dictionary<ushort, ushort>
+        {
+            {data}
+        };
+    }
+}

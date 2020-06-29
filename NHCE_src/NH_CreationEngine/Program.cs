@@ -19,7 +19,8 @@ namespace NH_CreationEngine
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            DoEverything();
+            //DoEverything();
+            ClassCreationEngine.CreateRecipeUtil();
 
             watch.Stop();
             Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
@@ -40,6 +41,7 @@ namespace NH_CreationEngine
             ClassCreationEngine.CreateRCPC();
             ClassCreationEngine.CreateRemakeInfoData();
             ClassCreationEngine.CreateRemakeUtil();
+            ClassCreationEngine.CreateRecipeUtil();
         }
 
         // Example functions

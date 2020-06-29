@@ -77,6 +77,7 @@ namespace NH_CreationEngine
         public static string BCSVItemColorItem = BCSVPath + Path.DirectorySeparatorChar + "ItemColor.csv";
         public static string BCSVItemRCPItem = BCSVPath + Path.DirectorySeparatorChar + "ItemRemakeCommonPattern.csv";
         public static string BCSVItemRCPCItem = BCSVPath + Path.DirectorySeparatorChar + "ItemRemakeCommonPatternCategory.csv";
+        public static string BCSVRecipeItem = BCSVPath + Path.DirectorySeparatorChar + "RecipeCraftParam.csv";
 
         /*** SARCS ***/
 

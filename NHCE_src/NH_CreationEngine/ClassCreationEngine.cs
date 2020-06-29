@@ -15,6 +15,7 @@ namespace NH_CreationEngine
         private const string itemRCPCRootName = "ItemRemakeCommonPatternCategory";
         private const string itemRemakeRootName = "ItemRemakeInfoData";
         private const string itemRemakeUtilRootName = "ItemRemakeUtil";
+        private const string itemRecipeRootName = "RecipeList";
 
         private const string itemKindBytesFilename = "item_kind.bin";
 
@@ -91,6 +92,34 @@ namespace NH_CreationEngine
 
                 string extractItemId = row[69].ToString();
                 string inserter = "{" + extractItemId.PadLeft(5, '0') + ", " + extract.PadLeft(4, '0') + @"}, // " + ItemCreationEngine.ItemLines[int.Parse(extractItemId) + 1];
+                for (int i = 0; i < tabCount; ++i)
+                    inserter = inserter + ' ';
+                varIndexes.Add(inserter);
+            }
+
+            string varAtEnd = varIndexes[varIndexes.Count - 1].Split("\r\n")[0]; // remove trails from last item
+            varIndexes[varIndexes.Count - 1] = varAtEnd;
+
+            preClass = replaceData(preClass, string.Join("", varIndexes));
+            writeOutFile(outputPath, preClass);
+        }
+
+        public static void CreateRecipeUtil()
+        {
+            var table = TableProcessor.LoadTable(PathHelper.BCSVRecipeItem, (char)9, 20); // ascending key
+            string templatePath = PathHelper.GetFullTemplatePathTo(itemRecipeRootName);
+            string outputPath = PathHelper.GetFullOutputPathTo(templatePath);
+            string preClass = File.ReadAllText(templatePath);
+            int tabCount = countCharsBefore(preClass, "{data}");
+
+            List<string> varIndexes = new List<string>();
+            foreach (DataRow row in table.Rows)
+            {
+                string extract = row[20].ToString(); // index
+                string extractItemId = row[12].ToString();
+                int recipeIndex = int.Parse(extract);
+                extract = "0x" + recipeIndex.ToString("X3");
+                string inserter = "{" + extract + ", " + extractItemId.PadLeft(5, '0') + @"}, // " + ItemCreationEngine.ItemLines[int.Parse(extractItemId) + 1];
                 for (int i = 0; i < tabCount; ++i)
                     inserter = inserter + ' ';
                 varIndexes.Add(inserter);
