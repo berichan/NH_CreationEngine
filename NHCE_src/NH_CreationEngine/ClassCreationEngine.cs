@@ -14,6 +14,7 @@ namespace NH_CreationEngine
         private const string itemRCPRootName = "ItemRemakeCommonPattern";
         private const string itemRCPCRootName = "ItemRemakeCommonPatternCategory";
         private const string itemRemakeRootName = "ItemRemakeInfoData";
+        private const string itemRemakeUtilRootName = "ItemRemakeUtil";
 
         public static void CreateRCPC() => createEnumFillerClass(1, PathHelper.BCSVItemRCPCItem, itemRCPCRootName, 2);
         public static void CreateRCP() => createEnumFillerClass(4, PathHelper.BCSVItemRCPItem, itemRCPRootName, 6, "FtrCmnFabric");
@@ -45,6 +46,34 @@ namespace NH_CreationEngine
             
             preClass = replaceData(preClass, string.Join("", kinds));
 
+            writeOutFile(outputPath, preClass);
+        }
+
+        public static void CreateRemakeUtil()
+        {
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 80 is kind 69 is number
+            string templatePath = PathHelper.GetFullTemplatePathTo(itemRemakeUtilRootName);
+            string outputPath = PathHelper.GetFullOutputPathTo(templatePath);
+            string preClass = File.ReadAllText(templatePath);
+            int tabCount = countCharsBefore(preClass, "{data}");
+
+            List<string> varIndexes = new List<string>();
+            foreach (DataRow row in table.Rows)
+            {
+                string extract = row[66].ToString(); // index of variation
+                if (extract == "-1") continue;
+
+                string extractItemId = row[69].ToString();
+                string inserter = "{" + extractItemId.PadLeft(5, '0') + ", " + extract.PadLeft(4, '0') + @"}, // " + ItemCreationEngine.ItemLines[int.Parse(extractItemId) + 1];
+                for (int i = 0; i < tabCount; ++i)
+                    inserter = inserter + ' ';
+                varIndexes.Add(inserter);
+            }
+
+            string varAtEnd = varIndexes[varIndexes.Count - 1].Split("\r\n")[0]; // remove trails from last item
+            varIndexes[varIndexes.Count - 1] = varAtEnd;
+
+            preClass = replaceData(preClass, string.Join("", varIndexes));
             writeOutFile(outputPath, preClass);
         }
 
