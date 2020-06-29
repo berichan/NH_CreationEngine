@@ -64,6 +64,7 @@ namespace NH_CreationEngine
         };
 
         public static string OutputPath = Program.dumpPath + Path.DirectorySeparatorChar + "Output";
+        public static string OutputPathBytes = OutputPath + Path.DirectorySeparatorChar + "Bytes";
 
         /*** BCSV ***/
 

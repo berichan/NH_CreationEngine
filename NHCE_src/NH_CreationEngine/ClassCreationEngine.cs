@@ -16,12 +16,18 @@ namespace NH_CreationEngine
         private const string itemRemakeRootName = "ItemRemakeInfoData";
         private const string itemRemakeUtilRootName = "ItemRemakeUtil";
 
+        private const string itemKindBytesFilename = "item_kind.bin";
+
+        // stuff that we keep because other things use it
+        public static List<string> ItemKindList;
+
         public static void CreateRCPC() => createEnumFillerClass(1, PathHelper.BCSVItemRCPCItem, itemRCPCRootName, 2);
         public static void CreateRCP() => createEnumFillerClass(4, PathHelper.BCSVItemRCPItem, itemRCPRootName, 6, "FtrCmnFabric");
         public static void CreateCustomColor() => createEnumFillerClass(0, PathHelper.BCSVItemColorItem, itemColorRootName, 1, "", 2);
 
         public static void CreateItemKind()
         {
+            const char pad = ' ';
             var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 80 is kind 69 is number
             string templatePath = PathHelper.GetFullTemplatePathTo(itemKindRootName);
             string outputPath = PathHelper.GetFullOutputPathTo(templatePath);
@@ -35,7 +41,7 @@ namespace NH_CreationEngine
                 string extract = row[80].ToString();
                 extract = extract.Replace("\0", string.Empty) + "\r\n";
                 for (int i = 0; i < tabCount; ++i)
-                    extract = extract + ' ';
+                    extract = extract + pad;
                 if (!kinds.Contains(extract))
                     kinds.Add(extract);
             }
@@ -43,10 +49,30 @@ namespace NH_CreationEngine
             kinds.Sort();
             string kindAtEnd = kinds[kinds.Count - 1].Split("\r\n")[0]; // remove trails from last item
             kinds[kinds.Count - 1] = kindAtEnd;
-            
             preClass = replaceData(preClass, string.Join("", kinds));
-
             writeOutFile(outputPath, preClass);
+
+            // keep the itemkind list but remove stuff we don't want
+            ItemKindList = new List<string>();
+            foreach (string s in kinds)
+                ItemKindList.Add(s.Split(',')[0]);
+
+            // create bytes data
+            string[] itemLines = ItemCreationEngine.ItemLines;
+            byte[] itemKindBytes = new byte[itemLines.Length];
+            for (int i = 0; i < itemLines.Length; ++i)
+            {
+                DataRow nRow = table.Rows.Find(i.ToString());
+                if (nRow != null)
+                {
+                    string checker = nRow[80].ToString().Replace("\0", string.Empty) + "\r\n" + "".PadRight(tabCount, pad);
+                    itemKindBytes[i] = (byte)ItemKindList.IndexOf(checker);
+                }
+                else
+                    itemKindBytes[i] = 0;
+            }
+
+            writeOutBytes(PathHelper.OutputPathBytes + Path.DirectorySeparatorChar + itemKindBytesFilename, itemKindBytes);
         }
 
         public static void CreateRemakeUtil()
@@ -165,6 +191,15 @@ namespace NH_CreationEngine
             if (!Directory.Exists(cleanPath))
                 Directory.CreateDirectory(cleanPath);
             File.WriteAllText(pathToFile, data);
+            Console.WriteLine("Wrote " + pathToFile);
+        }
+
+        private static void writeOutBytes(string pathToFile, byte[] bytes)
+        {
+            string cleanPath = Path.GetDirectoryName(pathToFile);
+            if (!Directory.Exists(cleanPath))
+                Directory.CreateDirectory(cleanPath);
+            File.WriteAllBytes(pathToFile, bytes);
             Console.WriteLine("Wrote " + pathToFile);
         }
 

@@ -15,14 +15,31 @@ namespace NH_CreationEngine
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
             //ShowNMTFile();
 
-            ClassCreationEngine.CreateRemakeUtil();
+            var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            //foreach (string k in PathHelper.Languages.Keys)
-            //    ItemCreationEngine.CreateBodyFabricColorPartsList(k);
+            DoEverything();
+
+            watch.Stop();
+            Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
+        }
+
+        static void DoEverything()
+        {
+            foreach (string k in PathHelper.Languages.Keys)
+            {
+                ItemCreationEngine.CreateItemList(k);
+                ItemCreationEngine.CreateVillagerList(k);
+                ItemCreationEngine.CreateBodyFabricColorPartsList(k);
+            }
+
+            ClassCreationEngine.CreateItemKind();
+            ClassCreationEngine.CreateCustomColor();
+            ClassCreationEngine.CreateRCP();
+            ClassCreationEngine.CreateRCPC();
+            ClassCreationEngine.CreateRemakeInfoData();
+            ClassCreationEngine.CreateRemakeUtil();
         }
 
         // Example functions
