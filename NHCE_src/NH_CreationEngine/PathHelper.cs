@@ -73,6 +73,9 @@ namespace NH_CreationEngine
         // bcsvs of note, remember these are parsed using acnh dumper and have the csv extension
         public static string BCSVItemParamItem = BCSVPath + Path.DirectorySeparatorChar + "ItemParam.csv";
         public static string BCSVItemParamRemakeItem = BCSVPath + Path.DirectorySeparatorChar + "ItemRemake.csv";
+        public static string BCSVItemColorItem = BCSVPath + Path.DirectorySeparatorChar + "ItemColor.csv";
+        public static string BCSVItemRCPItem = BCSVPath + Path.DirectorySeparatorChar + "ItemRemakeCommonPattern.csv";
+        public static string BCSVItemRCPCItem = BCSVPath + Path.DirectorySeparatorChar + "ItemRemakeCommonPatternCategory.csv";
 
         /*** SARCS ***/
 

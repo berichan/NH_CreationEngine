@@ -1,0 +1,23 @@
+﻿namespace NHSE.Core
+{
+    /// <summary>
+    /// Customization fabric used for an <see cref="Item"/>, sourced from the Able Sisters
+    /// </summary>
+    public enum ItemRemakeCommonPattern : byte
+    {
+        {data}
+    }
+
+    public static class ItemRemakeCommonPatternExtensions
+    {
+        // The game is nice and evenly has 20/category, in order.
+        private const int PatternsPerCategory = 20;
+
+        public static ItemRemakeCommonPatternCategory GetCategory(this ItemRemakeCommonPattern p)
+        {
+            var val = (byte) p;
+            var category = val / PatternsPerCategory;
+            return (ItemRemakeCommonPatternCategory)category;
+        }
+    }
+}

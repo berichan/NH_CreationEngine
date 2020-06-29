@@ -1,0 +1,15 @@
+﻿using System.Collections.Generic;
+
+namespace NHSE.Core
+{
+    /// <summary>
+    /// this sits in its own class because it's so darn big and has lots of highlighting CPU usage. thanks resharper
+    /// </summary>
+    public static class ItemRemakeInfoData
+    {
+        public static readonly IReadOnlyDictionary<short, ItemRemakeInfo> List = new Dictionary<short, ItemRemakeInfo>
+        {
+            {data}
+        };
+    }
+}

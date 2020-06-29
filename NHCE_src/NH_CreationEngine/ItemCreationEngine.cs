@@ -30,6 +30,13 @@ namespace NH_CreationEngine
         private const string itemListRootName = "text_item_";
         private const string villagerListRootName = "text_villager_";
 
+        private static string[] itemLines = null;
+        public static string[] ItemLines { get {
+                if (itemLines == null)
+                    itemLines = CreateItemList("en", false);
+                return itemLines;
+        } }
+
         public static void CreateBodyFabricColorPartsList(string language)
         {
             MSBT[] loadedMSBTs = new MSBT[4]
@@ -74,7 +81,7 @@ namespace NH_CreationEngine
 
             WriteOutFile(PathHelper.OutputPath, language, villagerListRootName + language + ".txt", string.Join("", rawEntries));
         }
-        public static void CreateItemList(string language)
+        public static string[] CreateItemList(string language, bool writeToFile = true)
         {
             string rootPath = PathHelper.GetItemDirectory(PathHelper.Languages[language]);
             List<MSBT> loadedItemsEng = new List<MSBT>(TableProcessor.LoadAllMSBTs(rootPath));
@@ -119,7 +126,13 @@ namespace NH_CreationEngine
             for (int i = 0; i < largestNumber+1; ++i)
                 lines[i] = ID_ItemTable.ContainsKey(i) ? ID_ItemTable[i] : "\r\n";
 
-            WriteOutFile(PathHelper.OutputPath, language, itemListRootName + language + ".txt", string.Join("", lines));
+            if (writeToFile)
+                WriteOutFile(PathHelper.OutputPath, language, itemListRootName + language + ".txt", string.Join("", lines));
+
+            if (language == "en")
+                itemLines = lines;
+
+            return lines;
         }
 
         public static void WriteOutFile(string pathRoot, string language, string filename, string dataToWrite)

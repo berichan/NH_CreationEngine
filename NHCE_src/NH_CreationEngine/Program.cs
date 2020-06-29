@@ -19,7 +19,7 @@ namespace NH_CreationEngine
 
             //ShowNMTFile();
 
-            ClassCreationEngine.CreateItemKind();
+            ClassCreationEngine.CreateRemakeInfoData();
 
             //foreach (string k in PathHelper.Languages.Keys)
             //    ItemCreationEngine.CreateBodyFabricColorPartsList(k);
