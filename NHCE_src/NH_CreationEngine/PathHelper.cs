@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace NH_CreationEngine
@@ -98,5 +99,22 @@ namespace NH_CreationEngine
         public static string GetBodyPartsNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_BodyParts.msbt";
         public static string GetFabricColorNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_FabricColor.msbt";
         public static string GetFabricPartsNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_FabricParts.msbt";
+
+        /*** Scripts ***/
+        public const string TemplateRoot = "Template_cs";
+        public const string TemplateCsExt = ".csTemplate";
+        public const string RequiredCsExt = ".cs";
+
+        // omit the .cs
+        public static string GetFullTemplatePathTo(string itemTemplateName, string extension = TemplateCsExt)
+        {
+            if (!extension.StartsWith('*'))
+                extension = extension.Insert(0, "*");
+            string[] files = Directory.GetFiles(TemplateRoot, extension, SearchOption.AllDirectories);
+            return files.Where(x => Path.GetFileName(x).Contains(itemTemplateName)).ElementAt(0);
+        }
+
+        public static string GetFullOutputPathTo(string templatePath) => templatePath.Replace(TemplateRoot, OutputPath).Replace(TemplateCsExt, RequiredCsExt);
+
     }
 }

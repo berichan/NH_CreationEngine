@@ -1,0 +1,21 @@
+﻿using static NHSE.Core.ItemKind;
+
+namespace NHSE.Core
+{
+    /// <summary>
+    /// Kinds of items
+    /// </summary>
+#pragma warning disable CA1027 // Mark enums with FlagsAttribute
+    public enum ItemKind : byte
+#pragma warning restore CA1027 // Mark enums with FlagsAttribute
+    {
+        {data}
+
+        Unknown = byte.MaxValue,
+    }
+
+    public static class ItemKindExtensions
+    {
+        public static bool IsFlower(this ItemKind k) => (Kind_Flower <= k && k <= Kind_FlowerBud) || (UnitIcon_FlwAnemone <= k && k <= UnitIcon_FlwTulip);
+    }
+}
