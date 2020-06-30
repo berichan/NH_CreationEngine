@@ -17,10 +17,11 @@ namespace NH_CreationEngine
         {
             //ShowNMTFile();
 
+            //Util.SearchAllBCSVFor("PltCosmosBlack2");
+
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            //DoEverything();
-            ClassCreationEngine.CreateRecipeUtil();
+            DoEverything();
 
             watch.Stop();
             Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
