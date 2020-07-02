@@ -12,34 +12,51 @@ namespace NH_Sysbot_Tools
 {
     class Program
     {
-        /* The functionality here requires at least sys-botbase v1.5. 
+        /* Program for dumping certain hashmaps from RAM. The functionality here requires at least sys-botbase v1.5. 
          * Verify that sys-botbase works correctly using something else before using this function, as you may get garbage data if your offsets are wrong */
 
         // Don't edit these
         const string mainIconMapName = "mainIcon.berimap";
+        const string sizeMapName = "size.berimap";
 
-        // Edit these if you'd like. You'll need to put these into NH_CreationEngine/Resources
-        static string outputMainIconMap = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        // Edit these if you'd like. You'll need to put these into NH_CreationEngine/Dumpfiles. The functionality will print the map path at the end;
+        static string outputMainPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
+        // Edit this with your switch's IP and Socket
+        public static string IP = "192.168.0.107";
+        public static int Port = 6000;
 
         public static void Main(string[] args)
         {
             if (!checkWriteAccess())
                 return;
 
-            var dictionaryMainIcon = HashmapDumper.GetMainInventoryIconHashmap();
+            HashmapDumper.sb.IP = IP; HashmapDumper.sb.Port = Port;
 
-            string outputPathFull = outputMainIconMap + Path.DirectorySeparatorChar + mainIconMapName;
-            using (StreamWriter file = new StreamWriter(outputPathFull, false))
-                foreach (var entry in dictionaryMainIcon)
+            var dictionaryMainIcon = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetMainIcon);
+            var dictionarySize = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetSizeMap);
+
+            string outputPathFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
+            writeoutDictionary(dictionaryMainIcon, outputPathFull);
+
+            string outputPathSize = outputMainPath + Path.DirectorySeparatorChar + sizeMapName;
+            writeoutDictionary(dictionarySize, outputPathSize);
+        }
+
+        static void writeoutDictionary<TKey, TValue>(Dictionary<TKey, TValue> dic, string outputPath)
+        {
+            
+            using (StreamWriter file = new StreamWriter(outputPath, false))
+                foreach (var entry in dic)
                     file.WriteLine("{0},{1}", entry.Key, entry.Value);
 
-            Console.WriteLine("Wrote: " + outputPathFull);
+            Console.WriteLine("Wrote: " + outputPath);
         }
 
         static bool checkWriteAccess()
         {
-            if (!Directory.Exists(outputMainIconMap))
-                throw new Exception(string.Format("Please create {0} first, I won't do that for you so as to not destroy your filesystem.", outputMainIconMap));
+            if (!Directory.Exists(outputMainPath))
+                throw new Exception(string.Format("Please create {0} first, I won't do that for you so as to not destroy your filesystem.", outputMainPath));
 
             // check write access
             FileIOPermission f = new FileIOPermission(PermissionState.None);

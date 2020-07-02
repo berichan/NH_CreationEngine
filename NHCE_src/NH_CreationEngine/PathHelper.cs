@@ -133,6 +133,7 @@ namespace NH_CreationEngine
         /*** Hashmaps generated using NH_Sysbot_Tools or dumped from game files ***/
         public const string DumpFileRoot = "DumpFiles";
         public static string MainIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "mainIcon.berimap";
+        public static string SizeDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "size.berimap";
 
     }
 }

@@ -66,6 +66,8 @@ namespace NH_CreationEngine
             foreach (var pm in pointerMap)
             {
                 // get the file
+                if (pm.Key == string.Empty)
+                    continue;
                 string[] files = Directory.GetFiles(pm.Key, "*.bfres", SearchOption.AllDirectories);
                 string fileWanted = new List<string>(files).Find(x => x.Contains("output.bfres", StringComparison.OrdinalIgnoreCase));
                 // copy file to output directory

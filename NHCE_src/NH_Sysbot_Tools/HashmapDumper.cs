@@ -9,11 +9,13 @@ namespace NH_Sysbot_Tools
 {
     public static class HashmapDumper
     {
-        static SysBot sb = new SysBot();
-        static object _sync = new object();
-        static ulong offsetMainIcon = 0x3748E60;
+        public static SysBot sb = new SysBot();
+        public static ulong offsetMainIcon = 0x3748E60;
+        public static ulong offsetSizeMap = offsetMainIcon + 0xF4D0;
 
-        public static Dictionary<string, int> GetMainInventoryIconHashmap()
+        static object _sync = new object();
+
+        public static Dictionary<string, int> GetMainInventoryIconHashmap(ulong offset)
         {
             Dictionary<string, int> builtDic = new Dictionary<string, int>();
 
@@ -24,7 +26,7 @@ namespace NH_Sysbot_Tools
                 Thread.Sleep(1000);
 
                 ulong nsoBaseAddress = getMainNsoBase(); // get offset of main
-                ulong mainIconAddress = nsoBaseAddress + offsetMainIcon; // get where the hashmap is stored in the main executable
+                ulong mainIconAddress = nsoBaseAddress + offset; // get where the hashmap is stored in the main executable
 
                 // check this is the start of the hashmap
                 KeyValuePair<string, int> startVal = PullKVP(mainIconAddress);
