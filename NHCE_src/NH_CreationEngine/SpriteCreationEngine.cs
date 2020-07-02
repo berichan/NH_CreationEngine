@@ -9,29 +9,124 @@ namespace NH_CreationEngine
 {
     public static class SpriteCreationEngine
     {
+        const string LayoutRoot = "Layout_";
+        const string SpriteFileRoot = LayoutRoot + "FtrIcon_";
+        const string MenuSpriteFileRoot = LayoutRoot + "MenuIcon_";
 
         public static void DoItemSearch()
         {
             Dictionary<string, string> ItemHexPath = new Dictionary<string, string>();
 
             // load the itemparam table
-            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 69 is item number, 91 is possible and 89 is always
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 69 is item number, 89 is ftricon
             var menuIconTable = TableProcessor.LoadTable(PathHelper.BCSVItemMenuIconItem, (char)9, 2);
+            var menuIconMap = getMainIconMap();
 
-            List<string> allPossibleItemName = new List<string>(Directory.GetDirectories(PathHelper.ModelPath, "Layout_FtrIcon_*", SearchOption.TopDirectoryOnly)); // Layouts are icons
+            List<string> allPossibleItemName = new List<string>(Directory.GetDirectories(PathHelper.ModelPath, LayoutRoot + "*", SearchOption.TopDirectoryOnly)); // Layouts are icons
             var itemHexes = getAllItemHexes(table);
+
             foreach (string itemName in itemHexes)
             {
+                if (itemName == "\0" || itemName == string.Empty)
+                    continue;
+
                 string[] split = itemName.Split("_");
-                if (split.Length == 1)
+                string filename = getSpriteFilename(table, 89, split[0], itemName, allPossibleItemName, menuIconMap, menuIconTable, split.Length > 1);
+                Console.WriteLine("{0} located at {1}", itemName, filename);
+                ItemHexPath.Add(itemName, filename);
+            }
+
+            // generate pointer map
+            Dictionary<string, List<string>> pointerMap = new Dictionary<string, List<string>>();
+            foreach (var ihx in ItemHexPath)
+            {
+                // create item name to file relation
+                if (pointerMap.ContainsKey(ihx.Value))
                 {
-                    // no variations
+                    // add us to the list of people that want this image
+                    var thisList = pointerMap[ihx.Value];
+                    thisList.Add(stringDecToHex(ihx.Key));
                 }
                 else
                 {
-                    // variations
+                    // create a relation
+                    List<string> newListWithUs = new List<string>();
+                    newListWithUs.Add(stringDecToHex(ihx.Key));
+                    pointerMap.Add(ihx.Value, newListWithUs);
                 }
             }
+
+            // create the files, naming them the first thing in the list
+            if (Directory.Exists(PathHelper.OutputPathSpritesMain))
+                Directory.Delete(PathHelper.OutputPathSpritesMain, true); // we are copying files here so this needs to go
+
+            Directory.CreateDirectory(PathHelper.OutputPathSpritesMain);
+
+            Dictionary<string, List<string>> writtenFileMap = new Dictionary<string, List<string>>();
+            foreach (var pm in pointerMap)
+            {
+                // get the file
+                string[] files = Directory.GetFiles(pm.Key, "*.bfres", SearchOption.AllDirectories);
+                string fileWanted = new List<string>(files).Find(x => x.Contains("output.bfres", StringComparison.OrdinalIgnoreCase));
+                // copy file to output directory
+                string newFileName = pm.Value[0];
+                string newFilePath = PathHelper.OutputPathSpritesMain + Path.DirectorySeparatorChar + newFileName + ".bfres";
+                File.Copy(fileWanted, newFilePath);
+                Console.WriteLine("Copied {0} to {1}", fileWanted, newFilePath);
+                // add to map
+                writtenFileMap.Add(newFileName, pm.Value);
+            }
+
+            // create pointer file
+            using (StreamWriter file = new StreamWriter(PathHelper.OutputPathPointerFile, false))
+                foreach (var wf in writtenFileMap)
+                    foreach (var s in wf.Value)
+                        file.WriteLine("{0},{1}", s, wf.Key);
+            
+
+            Console.WriteLine("Generated pointer file at: {0}", PathHelper.OutputPathPointerFile);
+        }
+
+        private static string getSpriteFilename(DataTable dt, int dtFilenameColNm, string toSearchFor, string fullSearchString, List<string> allPossibleItemName, Dictionary<string, int> menuIconMap, DataTable menuIconTable, bool isVariation)
+        {
+            var itemRow = dt.Rows.Find(toSearchFor);
+            if (itemRow == null)
+                throw new Exception("Item not found in mainparam table. " + toSearchFor);
+
+            if (toSearchFor == "3617")
+            {
+                float f = 3;
+            }
+            string filenameRoot = SpriteFileRoot + itemRow[dtFilenameColNm].ToString().Replace("\0", string.Empty) + (isVariation ? "_Remake_" + fullSearchString.Split("_", 2)[1] : "") + ".";
+            string alternativeVariationName = filenameRoot.TrimEnd('.') + "_0.";
+            string[] fullFilename = allPossibleItemName.FindAll(x => x.Contains(filenameRoot) || x.Contains(alternativeVariationName)).ToArray();
+            if (fullFilename.Length > 1)
+            {
+                Console.WriteLine("[WARNING] {0} has multiple file icons, we're gonna just pick the first one.", toSearchFor);
+                Thread.Sleep(1000);
+                return fullFilename[0];
+            }
+            else if (fullFilename.Length == 1)
+            {
+                return fullFilename[0];
+            }
+
+            // if we're still here, we just give the icon if the hashmap is loaded
+            if (menuIconMap == null)
+                return string.Empty;
+
+            // get the menu icon hash
+            string iconHash = itemRow[28].ToString().Replace("\0", string.Empty);
+            int rowNum = menuIconMap[iconHash];
+            var menuIconRowNeeded = menuIconTable.Rows[rowNum];
+            string menuIconFilename = MenuSpriteFileRoot + menuIconRowNeeded[3].ToString().Replace("\0", string.Empty) + ".";
+            string fullPath = allPossibleItemName.Find(x => x.Contains(menuIconFilename));
+
+            if (fullPath == string.Empty)
+                Console.WriteLine("Couldn't find anything for: " + fullSearchString);
+
+            return fullPath;
+
         }
 
         private static List<string> getAllItemHexes(DataTable mainParamTable)
@@ -99,6 +194,38 @@ namespace NH_CreationEngine
                     build.Add(string.Format("{0}_{1}", itemid, b));
 
             return build;
+        }
+
+        private static Dictionary<string, int> getMainIconMap()
+        {
+            string mainIconHashPath = PathHelper.MainIconDumpName;
+            if (!File.Exists(mainIconHashPath))
+            {
+                Console.WriteLine("[WARNING] No main icon hashmap dump exists. Everything that doesn't have a furniture icon such as flowers, bushes, trees etc will not have an icon because of this.");
+                Thread.Sleep(5000);
+                return null;
+            }
+
+            Dictionary<string, int> toReturn = new Dictionary<string, int>();
+            foreach (string line in File.ReadLines(mainIconHashPath))
+            {
+                string[] lines = line.Split(",");
+                if (lines.Length == 2)
+                    toReturn.Add(lines[0], int.Parse(lines[1]));
+            }
+            return toReturn;
+        }
+
+        private static string stringDecToHex(string item)
+        {
+            string[] hasUnderscores = item.Split("_", 2);
+            if (hasUnderscores.Length == 1)
+                return int.Parse(item).ToString("X");
+            else
+            {
+                string toRet = int.Parse(hasUnderscores[0]).ToString("X");
+                return toRet + "_" + hasUnderscores[1];
+            }
         }
 
         // functions that were used to bruteforce, are no longer required

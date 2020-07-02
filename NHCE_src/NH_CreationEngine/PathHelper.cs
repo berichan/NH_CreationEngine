@@ -65,6 +65,9 @@ namespace NH_CreationEngine
 
         public static string OutputPath = Program.dumpPath + Path.DirectorySeparatorChar + "Output";
         public static string OutputPathBytes = OutputPath + Path.DirectorySeparatorChar + "Bytes";
+        public static string OutputPathSpritesRoot = OutputPath + Path.DirectorySeparatorChar + "Sprites";
+        public static string OutputPathSpritesMain = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "Spritesbfres";
+        public static string OutputPathPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "SpritePointer.csv";
 
         /*** BCSV ***/
 
@@ -80,7 +83,7 @@ namespace NH_CreationEngine
         public static string BCSVRecipeItem = BCSVPath + Path.DirectorySeparatorChar + "RecipeCraftParam.csv";
         public static string BCSVItemMenuIconItem = BCSVPath + Path.DirectorySeparatorChar + "ItemMenuIcon.csv";
         public static string BCSVItemKindItem = BCSVPath + Path.DirectorySeparatorChar + "ItemKind.csv";
-        public static string BCSVItemSizeItem = BCSVPath + Path.DirectorySeparatorChar + "ItemSize.csv"; // no idea where item-size relation is located. If you find out, tell me.
+        public static string BCSVItemSizeItem = BCSVPath + Path.DirectorySeparatorChar + "ItemSize.csv";
 
         /*** SARCS ***/
 
@@ -126,6 +129,10 @@ namespace NH_CreationEngine
         }
 
         public static string GetFullOutputPathTo(string templatePath) => templatePath.Replace(TemplateRoot, OutputPath).Replace(TemplateCsExt, RequiredCsExt);
+
+        /*** Hashmaps generated using NH_Sysbot_Tools or dumped from game files ***/
+        public const string DumpFileRoot = "DumpFiles";
+        public static string MainIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "mainIcon.berimap";
 
     }
 }
