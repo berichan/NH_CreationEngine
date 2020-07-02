@@ -16,13 +16,11 @@ namespace NH_CreationEngine
         static void Main(string[] args)
         {
             //ShowNMTFile();
-
-            //Util.SearchAllBCSVFor("PltCosmosBlack2");
+            //Util.SearchAllBCSVFor("-139395293");
+            SpriteCreationEngine.DoItemSearch();
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            DoEverything();
-
+            //DoEverything();
             watch.Stop();
             Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
         }
@@ -58,7 +56,7 @@ namespace NH_CreationEngine
         {
             var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69);
 
-            DataRow nmt = table.Rows.Find("6426");
+            DataRow nmt = table.Rows.Find("5851");
             string val = nmt[91].ToString(); // or 89
             Console.WriteLine(val);
         }

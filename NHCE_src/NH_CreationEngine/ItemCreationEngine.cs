@@ -37,13 +37,46 @@ namespace NH_CreationEngine
                 return itemLines;
         } }
 
-        public static void CreateBodyFabricColorPartsList(string language)
+        private static string[] itemLinesJap = null;
+        public static string[] ItemLinesJap
+        {
+            get
+            {
+                if (itemLinesJap == null)
+                    itemLinesJap = CreateItemList("jp", false);
+                return itemLinesJap;
+            }
+        }
+
+        private static string[] bodyColorLines = null;
+        public static string[] BodyColorLines
+        {
+            get
+            {
+                if (bodyColorLines == null)
+                    CreateBodyFabricColorPartsList("en", false);
+                return bodyColorLines;
+            }
+        }
+
+        private static string[] fabricColorLines = null;
+        public static string[] FabricColorLines
+        {
+            get
+            {
+                if (fabricColorLines == null)
+                    CreateBodyFabricColorPartsList("en", false);
+                return fabricColorLines;
+            }
+        }
+
+        public static void CreateBodyFabricColorPartsList(string language, bool writeToFile = true)
         {
             MSBT[] loadedMSBTs = new MSBT[4]
             {
-                TableProcessor.LoadMSBT(PathHelper.GetBodyColorNameItem(PathHelper.Languages[language])),
+                TableProcessor.LoadMSBT(PathHelper.GetBodyColorNameItem(PathHelper.Languages[language])), // needs to be 0 because I'm lazy
                 TableProcessor.LoadMSBT(PathHelper.GetBodyPartsNameItem(PathHelper.Languages[language])),
-                TableProcessor.LoadMSBT(PathHelper.GetFabricColorNameItem(PathHelper.Languages[language])),
+                TableProcessor.LoadMSBT(PathHelper.GetFabricColorNameItem(PathHelper.Languages[language])), // as above, but 2 this time
                 TableProcessor.LoadMSBT(PathHelper.GetFabricPartsNameItem(PathHelper.Languages[language]))
             };
             int[][] separators = new int[][] // how much of a string we want between two separators in the msbt. "_" in this case 
@@ -60,7 +93,13 @@ namespace NH_CreationEngine
                 MSBT loaded = loadedMSBTs[i];
                 List<string> entries = createTabbedLabelList(loaded, language, "\t", separators[i]);
                 entries.Sort();
-                WriteOutFile(PathHelper.OutputPath, language, filenames[i] + language + ".txt", string.Join("", entries));
+                if (writeToFile)
+                    WriteOutFile(PathHelper.OutputPath, language, filenames[i] + language + ".txt", string.Join("", entries));
+
+                if (i == 0)
+                    bodyColorLines = entries.ToArray();
+                if (i == 2)
+                    fabricColorLines = entries.ToArray();
             }
         }
         public static void CreateVillagerList(string language)

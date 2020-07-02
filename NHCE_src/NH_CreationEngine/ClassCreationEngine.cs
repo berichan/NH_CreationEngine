@@ -26,7 +26,7 @@ namespace NH_CreationEngine
         public static void CreateRCP() => createEnumFillerClass(4, PathHelper.BCSVItemRCPItem, itemRCPRootName, 6, "FtrCmnFabric");
         public static void CreateCustomColor() => createEnumFillerClass(0, PathHelper.BCSVItemColorItem, itemColorRootName, 1, "", 2);
 
-        public static void CreateItemKind()
+        public static void CreateItemKind(bool writeToFile = true)
         {
             const char pad = ' ';
             var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 80 is kind 69 is number
@@ -51,7 +51,8 @@ namespace NH_CreationEngine
             string kindAtEnd = kinds[kinds.Count - 1].Split("\r\n")[0]; // remove trails from last item
             kinds[kinds.Count - 1] = kindAtEnd;
             preClass = replaceData(preClass, string.Join("", kinds));
-            writeOutFile(outputPath, preClass);
+            if (writeToFile)
+                writeOutFile(outputPath, preClass);
 
             // keep the itemkind list but remove stuff we don't want
             ItemKindList = new List<string>();
@@ -59,21 +60,24 @@ namespace NH_CreationEngine
                 ItemKindList.Add(s.Split(',')[0]);
 
             // create bytes data
-            string[] itemLines = ItemCreationEngine.ItemLines;
-            byte[] itemKindBytes = new byte[itemLines.Length];
-            for (int i = 0; i < itemLines.Length; ++i)
+            if (writeToFile)
             {
-                DataRow nRow = table.Rows.Find(i.ToString());
-                if (nRow != null)
+                string[] itemLines = ItemCreationEngine.ItemLines;
+                byte[] itemKindBytes = new byte[itemLines.Length];
+                for (int i = 0; i < itemLines.Length; ++i)
                 {
-                    string checker = nRow[80].ToString().Replace("\0", string.Empty) + "\r\n" + "".PadRight(tabCount, pad);
-                    itemKindBytes[i] = (byte)ItemKindList.IndexOf(checker);
+                    DataRow nRow = table.Rows.Find(i.ToString());
+                    if (nRow != null)
+                    {
+                        string checker = nRow[80].ToString().Replace("\0", string.Empty) + "\r\n" + "".PadRight(tabCount, pad);
+                        itemKindBytes[i] = (byte)ItemKindList.IndexOf(checker);
+                    }
+                    else
+                        itemKindBytes[i] = 0;
                 }
-                else
-                    itemKindBytes[i] = 0;
-            }
 
-            writeOutBytes(PathHelper.OutputPathBytes + Path.DirectorySeparatorChar + itemKindBytesFilename, itemKindBytes);
+                writeOutBytes(PathHelper.OutputPathBytes + Path.DirectorySeparatorChar + itemKindBytesFilename, itemKindBytes);
+            }
         }
 
         public static void CreateRemakeUtil()

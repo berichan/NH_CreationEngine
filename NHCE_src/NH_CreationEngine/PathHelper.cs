@@ -78,11 +78,17 @@ namespace NH_CreationEngine
         public static string BCSVItemRCPItem = BCSVPath + Path.DirectorySeparatorChar + "ItemRemakeCommonPattern.csv";
         public static string BCSVItemRCPCItem = BCSVPath + Path.DirectorySeparatorChar + "ItemRemakeCommonPatternCategory.csv";
         public static string BCSVRecipeItem = BCSVPath + Path.DirectorySeparatorChar + "RecipeCraftParam.csv";
+        public static string BCSVItemMenuIconItem = BCSVPath + Path.DirectorySeparatorChar + "ItemMenuIcon.csv";
+        public static string BCSVItemKindItem = BCSVPath + Path.DirectorySeparatorChar + "ItemKind.csv";
+        public static string BCSVItemSizeItem = BCSVPath + Path.DirectorySeparatorChar + "ItemSize.csv"; // no idea where item-size relation is located. If you find out, tell me.
 
         /*** SARCS ***/
 
         // root of all processed SARCs
         public static string SARCPath = Program.dumpPath + Path.DirectorySeparatorChar + "romSARCfs";
+
+        // Model (models, textures, icons, etc)
+        public static string ModelPath = SARCPath + Path.DirectorySeparatorChar + "Model";
 
         // Message (strings) root
         public static string MsgPath = SARCPath + Path.DirectorySeparatorChar + "Message";

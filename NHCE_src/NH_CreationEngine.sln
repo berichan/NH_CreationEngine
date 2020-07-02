@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NH_CreationEngine", "NH_CreationEngine\NH_CreationEngine.csproj", "{004065F9-6CFB-40BE-901B-277812D74B1A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NH_Sysbot_Tools", "NH_Sysbot_Tools\NH_Sysbot_Tools.csproj", "{0037DEEE-8706-4306-B528-A899EE4DDA1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{004065F9-6CFB-40BE-901B-277812D74B1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{004065F9-6CFB-40BE-901B-277812D74B1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{004065F9-6CFB-40BE-901B-277812D74B1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0037DEEE-8706-4306-B528-A899EE4DDA1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0037DEEE-8706-4306-B528-A899EE4DDA1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0037DEEE-8706-4306-B528-A899EE4DDA1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0037DEEE-8706-4306-B528-A899EE4DDA1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

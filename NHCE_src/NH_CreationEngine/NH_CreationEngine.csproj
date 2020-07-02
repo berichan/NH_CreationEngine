@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="XCOPY &quot;$(SolutionDir)NH_CreationEngine\Template_cs&quot; &quot;$(TargetDir)\Template_cs\&quot; /S /Y" />
+    <Exec Command="XCOPY &quot;$(SolutionDir)NH_CreationEngine\Template_cs&quot; &quot;$(TargetDir)\Template_cs\&quot; /S /Y&#xD;&#xA;XCOPY &quot;$(SolutionDir)NH_CreationEngine\DumpFiles&quot; &quot;$(TargetDir)\DumpFiles\&quot; /S /Y" />
   </Target>
 
 </Project>
