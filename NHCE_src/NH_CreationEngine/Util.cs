@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
@@ -12,7 +13,7 @@ namespace NH_CreationEngine
         public static void SearchAllBCSVFor(string sequence)
         {
             var rawTables = loadAllTablesRaw();
-            Console.WriteLine("Search started for: " +sequence);
+            Console.WriteLine("Search started for: " + sequence);
             foreach (var blobHash in rawTables)
                 if (blobHash.Value.Contains(sequence, StringComparison.OrdinalIgnoreCase)) Console.WriteLine(sequence + " is in " + blobHash.Key);
 

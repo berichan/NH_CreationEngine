@@ -18,6 +18,7 @@ namespace NH_CreationEngine
             //ShowNMTFile();
             //Util.SearchAllBCSVFor("-139395293");
             SpriteCreationEngine.DoItemSearch();
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_2_1\Output\Sprites\Spritesbfres\img", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_2_1\Output\Sprites\imagedump.dmp");
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
             //DoEverything();

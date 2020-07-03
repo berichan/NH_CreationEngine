@@ -67,7 +67,7 @@ namespace NH_CreationEngine
         public static string OutputPathBytes = OutputPath + Path.DirectorySeparatorChar + "Bytes";
         public static string OutputPathSpritesRoot = OutputPath + Path.DirectorySeparatorChar + "Sprites";
         public static string OutputPathSpritesMain = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "Spritesbfres";
-        public static string OutputPathPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "SpritePointer.csv";
+        public static string OutputPathPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "SpritePointer.txt";
 
         /*** BCSV ***/
 
