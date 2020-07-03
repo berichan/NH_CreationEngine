@@ -32,7 +32,7 @@ namespace NH_CreationEngine
         public static void CreateItemKind(bool writeToFile = true)
         {
             const char pad = ' ';
-            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 80 is kind 69 is number
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, "0x54706054"); // "0xFC275E86" is kind "0x54706054" is number
             string templatePath = PathHelper.GetFullTemplatePathTo(itemKindRootName);
             string outputPath = PathHelper.GetFullOutputPathTo(templatePath);
             string preClass = File.ReadAllText(templatePath);
@@ -42,8 +42,8 @@ namespace NH_CreationEngine
             List<string> kinds = new List<string>();
             foreach (DataRow row in table.Rows)
             {
-                string extract = row[80].ToString();
-                extract = extract.Replace("\0", string.Empty) + "\r\n";
+                string extract = row["0xFC275E86"].ToString();
+                extract = extract.Replace("\0", string.Empty) + ',' + "\r\n";
                 for (int i = 0; i < tabCount; ++i)
                     extract = extract + pad;
                 if (!kinds.Contains(extract))
@@ -72,8 +72,8 @@ namespace NH_CreationEngine
                     DataRow nRow = table.Rows.Find(i.ToString());
                     if (nRow != null)
                     {
-                        string checker = nRow[80].ToString().Replace("\0", string.Empty) + "\r\n" + "".PadRight(tabCount, pad);
-                        itemKindBytes[i] = (byte)ItemKindList.IndexOf(checker);
+                        string checker = nRow["0xFC275E86"].ToString().Replace("\0", string.Empty) + "\r\n" + "".PadRight(tabCount, pad);
+                        itemKindBytes[i] = (byte)ItemKindList.IndexOf(checker.TrimEnd());
                     }
                     else
                         itemKindBytes[i] = 0;
@@ -85,7 +85,7 @@ namespace NH_CreationEngine
 
         public static void CreateRemakeUtil(bool writeToFile = true)
         {
-            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 80 is kind 69 is number
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, "0x54706054"); // "0xFC275E86" is kind "0x54706054" is number
             string templatePath = PathHelper.GetFullTemplatePathTo(itemRemakeUtilRootName);
             string outputPath = PathHelper.GetFullOutputPathTo(templatePath);
             string preClass = File.ReadAllText(templatePath);
@@ -95,10 +95,10 @@ namespace NH_CreationEngine
             ItemRemakeHash = new Dictionary<string, string>();
             foreach (DataRow row in table.Rows)
             {
-                string extract = row[66].ToString(); // index of variation
+                string extract = row["0xCB5EB33F"].ToString(); // index of variation
                 if (extract == "-1") continue;
 
-                string extractItemId = row[69].ToString();
+                string extractItemId = row["0x54706054"].ToString();
                 ItemRemakeHash.Add(extractItemId, extract);
                 string inserter = "{" + extractItemId.PadLeft(5, '0') + ", " + extract.PadLeft(4, '0') + @"}, // " + ItemCreationEngine.ItemLines[int.Parse(extractItemId) + 1];
                 for (int i = 0; i < tabCount; ++i)

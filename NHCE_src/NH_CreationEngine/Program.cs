@@ -10,18 +10,18 @@ namespace NH_CreationEngine
     class Program
     {
         //edit this
-        public const string dumpPath = @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_2_1\"; // should have your romBCSVfs and romSARCfs in it. Use https://github.com/kwsch/ACNH_Dumper
+        public const string dumpPath = @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\"; // should have your romBCSVfs and romSARCfs in it. Use https://github.com/kwsch/ACNH_Dumper
 
 
         static void Main(string[] args)
         {
             //ShowNMTFile();
             //Util.SearchAllBCSVFor("-139395293");
-            SpriteCreationEngine.DoItemSearch();
-            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_2_1\Output\Sprites\Spritesbfres\img", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_2_1\Output\Sprites\imagedump.dmp");
+            //SpriteCreationEngine.DoItemSearch();
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\Spritesbfres\processed", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\imagedump.dmp");
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
-            //DoEverything();
+            DoEverything();
             watch.Stop();
             Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
         }

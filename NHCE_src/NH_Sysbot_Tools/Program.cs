@@ -34,13 +34,13 @@ namespace NH_Sysbot_Tools
             HashmapDumper.sb.IP = IP; HashmapDumper.sb.Port = Port;
 
             var dictionaryMainIcon = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetMainIcon);
-            var dictionarySize = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetSizeMap);
+            //var dictionarySize = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetSizeMap);
 
             string outputPathFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
             writeoutDictionary(dictionaryMainIcon, outputPathFull);
 
-            string outputPathSize = outputMainPath + Path.DirectorySeparatorChar + sizeMapName;
-            writeoutDictionary(dictionarySize, outputPathSize);
+            //string outputPathSize = outputMainPath + Path.DirectorySeparatorChar + sizeMapName;
+            //writeoutDictionary(dictionarySize, outputPathSize);
         }
 
         static void writeoutDictionary<TKey, TValue>(Dictionary<TKey, TValue> dic, string outputPath)

@@ -10,7 +10,7 @@ namespace NH_Sysbot_Tools
     public static class HashmapDumper
     {
         public static SysBot sb = new SysBot();
-        public static ulong offsetMainIcon = 0x3748E60;
+        public static ulong offsetMainIcon = 0x3920C00;
         public static ulong offsetSizeMap = offsetMainIcon + 0xF4D0;
 
         static object _sync = new object();

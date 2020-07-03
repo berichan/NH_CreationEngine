@@ -18,7 +18,7 @@ namespace NH_CreationEngine
             Dictionary<string, string> ItemHexPath = new Dictionary<string, string>();
 
             // load the itemparam table
-            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 69 is item number, 89 is ftricon
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, "0x54706054"); // "0x54706054" is item number, "0x3FEBC642" is ftricon
             var menuIconTable = TableProcessor.LoadTable(PathHelper.BCSVItemMenuIconItem, (char)9, 2);
             var menuIconMap = getMainIconMap();
 
@@ -31,7 +31,7 @@ namespace NH_CreationEngine
                     continue;
 
                 string[] split = itemName.Split("_");
-                string filename = getSpriteFilename(table, 89, split[0], itemName, allPossibleItemName, menuIconMap, menuIconTable, split.Length > 1);
+                string filename = getSpriteFilename(table, "0x3FEBC642", split[0], itemName, allPossibleItemName, menuIconMap, menuIconTable, split.Length > 1);
                 Console.WriteLine("{0} located at {1}", itemName, filename);
                 ItemHexPath.Add(itemName, filename);
             }
@@ -89,16 +89,12 @@ namespace NH_CreationEngine
             Console.WriteLine("Generated pointer file at: {0}", PathHelper.OutputPathPointerFile);
         }
 
-        private static string getSpriteFilename(DataTable dt, int dtFilenameColNm, string toSearchFor, string fullSearchString, List<string> allPossibleItemName, Dictionary<string, int> menuIconMap, DataTable menuIconTable, bool isVariation)
+        private static string getSpriteFilename(DataTable dt, string dtFilenameColNm, string toSearchFor, string fullSearchString, List<string> allPossibleItemName, Dictionary<string, int> menuIconMap, DataTable menuIconTable, bool isVariation)
         {
             var itemRow = dt.Rows.Find(toSearchFor);
             if (itemRow == null)
                 throw new Exception("Item not found in mainparam table. " + toSearchFor);
 
-            if (toSearchFor == "3617")
-            {
-                float f = 3;
-            }
             string filenameRoot = SpriteFileRoot + itemRow[dtFilenameColNm].ToString().Replace("\0", string.Empty) + (isVariation ? "_Remake_" + fullSearchString.Split("_", 2)[1] : "") + ".";
             string alternativeVariationName = filenameRoot.TrimEnd('.') + "_0.";
             string[] fullFilename = allPossibleItemName.FindAll(x => x.Contains(filenameRoot) || x.Contains(alternativeVariationName)).ToArray();
@@ -140,17 +136,31 @@ namespace NH_CreationEngine
 
             foreach (DataRow row in mainParamTable.Rows)
             {
-                string itemNumber = row[69].ToString().Replace("\0", string.Empty);
+                List<string> toAdd = new List<string>();
+                string itemNumber = row["0x54706054"].ToString().Replace("\0", string.Empty);
+                string variationMasterItemNumber = checkForVariationPointer(itemNumber);
 
-                if (bodyPartMap.ContainsKey(itemNumber))
+                string toSearch = variationMasterItemNumber == string.Empty ? itemNumber : variationMasterItemNumber;
+                if (bodyPartMap.ContainsKey(toSearch))
                 {
-                    if (fabricPartMap.ContainsKey(itemNumber))
-                        toReturn.AddRange(getItemNamesFromHashes(itemNumber, bodyPartMap[itemNumber], fabricPartMap[itemNumber]));
+                    if (fabricPartMap.ContainsKey(toSearch))
+                        toAdd.AddRange(getItemNamesFromHashes(toSearch, bodyPartMap[toSearch], fabricPartMap[toSearch]));
                     else
-                        toReturn.AddRange(getItemNamesFromHashes(itemNumber, bodyPartMap[itemNumber]));
+                        toAdd.AddRange(getItemNamesFromHashes(toSearch, bodyPartMap[toSearch]));
                 }
                 else
-                    toReturn.Add(itemNumber);
+                    toAdd.Add(toSearch);
+
+                if (variationMasterItemNumber != string.Empty)
+                {
+                    // replace with us
+                    List<string> filter = new List<string>();
+                    foreach (string s in toAdd)
+                        filter.Add(replaceFirst(s, variationMasterItemNumber, itemNumber));
+                    toAdd = filter;
+                }
+
+                toReturn.AddRange(toAdd);
             }
 
             return toReturn;
@@ -218,6 +228,27 @@ namespace NH_CreationEngine
             return toReturn;
         }
 
+        private static string checkForVariationPointer(string s)
+        {
+            if (ClassCreationEngine.ItemRemakeHash == null)
+                ClassCreationEngine.CreateRemakeUtil(false);
+            if (ClassCreationEngine.ItemRemakePointer == null)
+                ClassCreationEngine.CreateRemakeInfoData(false);
+
+            if (ClassCreationEngine.ItemRemakeHash.ContainsKey(s))
+            {
+                string varId = ClassCreationEngine.ItemRemakeHash[s];
+                string pointerID = ClassCreationEngine.ItemRemakePointer[varId];
+
+                if (pointerID == s) // don't return self
+                    return string.Empty;
+                else
+                    return pointerID;
+            }
+
+            return string.Empty;
+        }
+
         private static string stringDecToHex(string item)
         {
             string[] hasUnderscores = item.Split("_", 2);
@@ -230,14 +261,24 @@ namespace NH_CreationEngine
             }
         }
 
+        private static string replaceFirst(string text, string search, string replace)
+        {
+            int pos = text.IndexOf(search);
+            if (pos < 0)
+            {
+                return text;
+            }
+            return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+        }
+
         // functions that were used to bruteforce, are no longer required
-        
+
         public static void DoItemSearchOld()
         {
             Dictionary<string, string> ItemHexPath = new Dictionary<string, string>();
 
             // load the itemparam table
-            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 69 is item number, 91 is possible and 89 is always
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, "0x54706054"); // "0x54706054" is item number, 91 is possible and 89 is always
             var menuIconTable = TableProcessor.LoadTable(PathHelper.BCSVItemMenuIconItem, (char)9, 2);
             List<string> allPossibleItemName = new List<string>(Directory.GetDirectories(PathHelper.ModelPath, "Layout*", SearchOption.TopDirectoryOnly)); // Layouts are icons
             allPossibleItemName.RemoveAll(x => x.Contains("ClosetIcon")); // Bigger textures that aren't needed for now
@@ -248,7 +289,7 @@ namespace NH_CreationEngine
                 string itemNameExists = row[89].ToString().Replace("\0", string.Empty);
                 List<string> hits = new List<string>();
 
-                if (row[69].ToString() == "2750")
+                if (row["0x54706054"].ToString() == "2750")
                 {
                     string f = "?"; // hacky breakpoint checking
                 }
@@ -264,14 +305,14 @@ namespace NH_CreationEngine
 
                 if (hits.Count == 0)
                 {
-                    StringBuilder notFoundItem = new StringBuilder(row[69].ToString());
-                    notFoundItem.Append(string.Format(" ({0}) ", ItemCreationEngine.ItemLines[int.Parse(row[69].ToString())+1].Split("\r\n")[0]));
+                    StringBuilder notFoundItem = new StringBuilder(row["0x54706054"].ToString());
+                    notFoundItem.Append(string.Format(" ({0}) ", ItemCreationEngine.ItemLines[int.Parse(row["0x54706054"].ToString())+1].Split("\r\n")[0]));
                     notFoundItem.Append("Not found");
                     Console.WriteLine(notFoundItem.ToString());
                 }
                 else
                 {
-                    ItemHexPath.Add(row[69].ToString(), hits[0]);
+                    ItemHexPath.Add(row["0x54706054"].ToString(), hits[0]);
                 }
             }
 
