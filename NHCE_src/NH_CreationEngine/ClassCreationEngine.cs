@@ -22,6 +22,9 @@ namespace NH_CreationEngine
         // stuff that we keep because other things use it
         public static List<string> ItemKindList;
 
+        public static Dictionary<string, string> ItemRemakeHash; // plug in the item id (not hex) and get the variation table id
+        public static Dictionary<string, string> ItemRemakePointer; // plug in the variation table ID and get the item id that has all the _0_0 (variation master) after it
+
         public static void CreateRCPC() => createEnumFillerClass(1, PathHelper.BCSVItemRCPCItem, itemRCPCRootName, 2);
         public static void CreateRCP() => createEnumFillerClass(4, PathHelper.BCSVItemRCPItem, itemRCPRootName, 6, "FtrCmnFabric");
         public static void CreateCustomColor() => createEnumFillerClass(0, PathHelper.BCSVItemColorItem, itemColorRootName, 1, "", 2);
@@ -80,7 +83,7 @@ namespace NH_CreationEngine
             }
         }
 
-        public static void CreateRemakeUtil()
+        public static void CreateRemakeUtil(bool writeToFile = true)
         {
             var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, 69); // 80 is kind 69 is number
             string templatePath = PathHelper.GetFullTemplatePathTo(itemRemakeUtilRootName);
@@ -89,12 +92,14 @@ namespace NH_CreationEngine
             int tabCount = countCharsBefore(preClass, "{data}");
 
             List<string> varIndexes = new List<string>();
+            ItemRemakeHash = new Dictionary<string, string>();
             foreach (DataRow row in table.Rows)
             {
                 string extract = row[66].ToString(); // index of variation
                 if (extract == "-1") continue;
 
                 string extractItemId = row[69].ToString();
+                ItemRemakeHash.Add(extractItemId, extract);
                 string inserter = "{" + extractItemId.PadLeft(5, '0') + ", " + extract.PadLeft(4, '0') + @"}, // " + ItemCreationEngine.ItemLines[int.Parse(extractItemId) + 1];
                 for (int i = 0; i < tabCount; ++i)
                     inserter = inserter + ' ';
@@ -105,7 +110,8 @@ namespace NH_CreationEngine
             varIndexes[varIndexes.Count - 1] = varAtEnd;
 
             preClass = replaceData(preClass, string.Join("", varIndexes));
-            writeOutFile(outputPath, preClass);
+            if (writeToFile)
+                writeOutFile(outputPath, preClass);
         }
 
         public static void CreateRecipeUtil()
@@ -136,7 +142,7 @@ namespace NH_CreationEngine
             writeOutFile(outputPath, preClass);
         }
 
-        public static void CreateRemakeInfoData()
+        public static void CreateRemakeInfoData(bool writeToFile = true)
         {
             var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamRemakeItem, (char)9, 20); 
             string templatePath = PathHelper.GetFullTemplatePathTo(itemRemakeRootName);
@@ -145,9 +151,11 @@ namespace NH_CreationEngine
 
             int tabCount = countCharsBefore(preClass, "{data}");
             List<string> remakeRow = new List<string>();
+            ItemRemakePointer = new Dictionary<string, string>();
             foreach (DataRow row in table.Rows)
             {
                 string extract = buildDicEntryFromDataRow(row, 18, 20, 38, 22, 39, 41);
+                ItemRemakePointer.Add(row[20].ToString(), row[18].ToString());
                 extract = extract.Replace("\0", string.Empty);//  + "\r\n"; we don't need rn because the item list has it at the end of each entry and we use it to comment
                 for (int i = 0; i < tabCount; ++i)
                     extract = extract + ' ';
@@ -157,7 +165,8 @@ namespace NH_CreationEngine
             string remakeAtEnd = remakeRow[remakeRow.Count - 1].Split("\r\n")[0]; // remove trails from last item
             remakeRow[remakeRow.Count - 1] = remakeAtEnd;
             preClass = replaceData(preClass, string.Join("", remakeRow));
-            writeOutFile(outputPath, preClass);
+            if (writeToFile)
+                writeOutFile(outputPath, preClass);
         }
 
         // all ints are column numbers. sB1 = start byte 1, SB2 = start byte 2
