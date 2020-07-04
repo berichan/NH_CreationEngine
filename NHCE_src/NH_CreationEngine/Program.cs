@@ -12,18 +12,21 @@ namespace NH_CreationEngine
         //edit this
         public const string dumpPath = @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\"; // should have your romBCSVfs and romSARCfs in it. Use https://github.com/kwsch/ACNH_Dumper
 
-
+        // undocumented as of yet. Known issue is that bcsv file is errored currently with ACNH dumper and needs to be fixed manually, or just use an alternative bcsv->csv converter. The last row has junk data in it too so just delete that (not needed for this)
+        // also requires you to dump your own menu icon map using sysbot on your switch using the other project in this solution (NH_Sysbot_Tools) and move the berimap file it creates into /NH_CreationEngine/Dumpfiles/mainIcon.berimap 
+        // once you get your items filtered you may use my fork of switch toolbox to batch convert textures, this preserves filenames (untick both top options, one of them is creating new folder which you don't need) https://github.com/berichan/Switch-Toolbox
         static void Main(string[] args)
         {
             //ShowNMTFile();
-            //Util.SearchAllBCSVFor("-139395293");
-            //SpriteCreationEngine.DoItemSearch();
+            //Util.SearchAllBCSVFor("ScratchTummy");
+            //Util.PrintBigFolders(PathHelper.ModelPath);
+            SpriteCreationEngine.DoItemSearch();
             //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\Spritesbfres\processed", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\imagedump.dmp");
 
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            DoEverything();
-            watch.Stop();
-            Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            //DoEverything();
+            //watch.Stop();
+            //Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
         }
 
         static void DoEverything()

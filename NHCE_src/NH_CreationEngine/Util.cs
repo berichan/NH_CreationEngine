@@ -31,5 +31,37 @@ namespace NH_CreationEngine
             }
             return toRet;
         }
+
+        public static void PrintBigFolders(string path)
+        {
+            Dictionary<string, long> foldersSize = new Dictionary<string, long>();
+            string[] dirs = Directory.GetDirectories(path, "", SearchOption.TopDirectoryOnly);
+            foreach (string s in dirs)
+                foldersSize.Add(s, DirSize(new DirectoryInfo(s)));
+
+            var myList = foldersSize.ToList();
+            myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+
+            foreach (var info in myList)
+                Console.WriteLine("{0}: {1} bytes", info.Key, info.Value);
+        }
+
+        public static long DirSize(DirectoryInfo d)
+        {
+            long size = 0;
+            // Add file sizes.
+            FileInfo[] fis = d.GetFiles();
+            foreach (FileInfo fi in fis)
+            {
+                size += fi.Length;
+            }
+            // Add subdirectory sizes.
+            DirectoryInfo[] dis = d.GetDirectories();
+            foreach (DirectoryInfo di in dis)
+            {
+                size += DirSize(di);
+            }
+            return size;
+        }
     }
 }
