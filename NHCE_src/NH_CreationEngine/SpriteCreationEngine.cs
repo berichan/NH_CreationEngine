@@ -149,7 +149,12 @@ namespace NH_CreationEngine
                         toAdd.AddRange(getItemNamesFromHashes(toSearch, bodyPartMap[toSearch]));
                 }
                 else
-                    toAdd.Add(toSearch);
+                {
+                    if (fabricPartMap.ContainsKey(toSearch))
+                        toAdd.AddRange(getItemNamesFromHashes(toSearch, null, fabricPartMap[toSearch]));
+                    else
+                        toAdd.Add(toSearch);
+                }
 
                 if (variationMasterItemNumber != string.Empty)
                 {
@@ -195,7 +200,13 @@ namespace NH_CreationEngine
         private static List<string> getItemNamesFromHashes(string itemid, List<string> bodyParts, List<string> fabricParts = null)
         {
             List<string> build = new List<string>();
-            if (fabricParts != null)
+
+            if (bodyParts == null)
+            {
+                foreach (string f in fabricParts)
+                    build.Add(string.Format("{0}_{1}_{2}", itemid, '0', f));
+            }
+            else if (fabricParts != null)
             {
                 foreach (string b in bodyParts)
                     foreach (string f in fabricParts)

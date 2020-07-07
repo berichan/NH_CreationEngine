@@ -29,6 +29,7 @@ namespace NH_CreationEngine
         private const string fabricPartsRootName = "text_fabric_parts_";
         private const string itemListRootName = "text_item_";
         private const string villagerListRootName = "text_villager_";
+        private const string villagerPhraseRootName = "text_phrase_";
 
         private static string[] itemLines = null;
         public static string[] ItemLines { get {
@@ -120,6 +121,17 @@ namespace NH_CreationEngine
 
             WriteOutFile(PathHelper.OutputPath, language, villagerListRootName + language + ".txt", string.Join("", rawEntries));
         }
+
+        public static void CreateVillagerPhraseList(string language)
+        {
+            MSBT loadedMSBT = TableProcessor.LoadMSBT(PathHelper.GetVillagerNPCPhraseItem(PathHelper.Languages[language]));
+
+            List<string> entries = createTabbedLabelList(loadedMSBT, language);
+            entries.Sort();
+
+            WriteOutFile(PathHelper.OutputPath, language, villagerPhraseRootName + language + ".txt", string.Join("", entries));
+        }
+
         public static string[] CreateItemList(string language, bool writeToFile = true)
         {
             string rootPath = PathHelper.GetItemDirectory(PathHelper.Languages[language]);

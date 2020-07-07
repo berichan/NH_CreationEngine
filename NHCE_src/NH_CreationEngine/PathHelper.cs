@@ -108,6 +108,7 @@ namespace NH_CreationEngine
         // villager names
         public static string GetVillagerNameItem(string lang) => GetItemDirectory(lang, "Npc") + Path.DirectorySeparatorChar + "STR_NNpcName.msbt";
         public static string GetVillagerNPCNameItem(string lang) => GetItemDirectory(lang, "Npc") + Path.DirectorySeparatorChar + "STR_SNpcName.msbt";
+        public static string GetVillagerNPCPhraseItem(string lang) => GetItemDirectory(lang, "Npc") + Path.DirectorySeparatorChar + "STR_NNpcPhrase.msbt";
         // body + fabric
         public static string GetBodyColorNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_BodyColor.msbt";
         public static string GetBodyPartsNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_BodyParts.msbt";

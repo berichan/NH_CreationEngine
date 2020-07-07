@@ -18,13 +18,13 @@ namespace NH_CreationEngine
         static void Main(string[] args)
         {
             //ShowNMTFile();
-            //Util.SearchAllBCSVFor("ScratchTummy");
+            //Util.SearchAllBCSVFor("abc");
             //Util.PrintBigFolders(PathHelper.ModelPath);
-            SpriteCreationEngine.DoItemSearch();
+            //SpriteCreationEngine.DoItemSearch();
             //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\Spritesbfres\processed", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\imagedump.dmp");
 
             //var watch = System.Diagnostics.Stopwatch.StartNew();
-            //DoEverything();
+            DoEverything();
             //watch.Stop();
             //Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
         }
@@ -36,6 +36,7 @@ namespace NH_CreationEngine
                 ItemCreationEngine.CreateItemList(k);
                 ItemCreationEngine.CreateVillagerList(k);
                 ItemCreationEngine.CreateBodyFabricColorPartsList(k);
+                ItemCreationEngine.CreateVillagerPhraseList(k);
             }
 
             ClassCreationEngine.CreateItemKind();
