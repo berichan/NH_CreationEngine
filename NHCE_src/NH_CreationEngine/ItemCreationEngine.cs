@@ -21,6 +21,25 @@ namespace NH_CreationEngine
             new char[] { (char)0x000E, '\0', '\0', '\0', (char)0x0006, (char)0x0065, (char)0x006E, (char)0x0073 },
             new char[] { (char)0x000E, '\0', (char)0x0002, (char)0x006E, (char)0x0002, (char)0x006E, (char)0x0002, (char)0x006E },
             new char[] { (char)0x000E, '\0', '\0', '\0', (char)0x0006, (char)0x0073, (char)0x0065, (char)0x0073 },
+            new char[] { (char)0x000A, '\0', '\0', '\0', (char)0x0002, (char)0x0027 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0008, (char)0x0002, (char)0x0004 }, // jp
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0010, (char)0x0006, (char)0x000C },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x000A, (char)0x0002, (char)0x0006 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0008, (char)0x0002, (char)0x0004 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x000C, (char)0x0004, (char)0x0008 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0008, (char)0x0004, (char)0x0004 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x000E, (char)0x0004, (char)0x000A },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x000A, (char)0x0004, (char)0x0006 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x000C, (char)0x0006, (char)0x0008 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0012, (char)0x0008, (char)0x000E },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0010, (char)0x0008, (char)0x000C },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0006, (char)0x0002, (char)0x0002 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0014, (char)0x0008, (char)0x0010 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0012, (char)0x0006, (char)0x000E },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x000C, (char)0x0002, (char)0x0008 },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x000E, (char)0x0006, (char)0x000A },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x000E, (char)0x000E, (char)0x000A },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0010, (char)0x0004, (char)0x000C },
         };
 
         private const string bodyColorRootName = "text_body_color_";

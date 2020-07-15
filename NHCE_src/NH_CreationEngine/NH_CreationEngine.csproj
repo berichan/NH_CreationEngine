@@ -10,11 +10,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="NHSE.Core">
+      <HintPath>NHSE\NHSE.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="NHSE.Parsing">
+      <HintPath>NHSE\NHSE.Parsing.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Template_cs\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="XCOPY &quot;$(SolutionDir)NH_CreationEngine\Template_cs&quot; &quot;$(TargetDir)\Template_cs\&quot; /S /Y&#xD;&#xA;XCOPY &quot;$(SolutionDir)NH_CreationEngine\DumpFiles&quot; &quot;$(TargetDir)\DumpFiles\&quot; /S /Y" />
+    <Exec Command="XCOPY /S /Y /R &quot;$(SolutionDir)NH_CreationEngine\Template_cs&quot; &quot;$(TargetDir)Template_cs\&quot; &#xD;&#xA;XCOPY /S /Y /R &quot;$(SolutionDir)NH_CreationEngine\DumpFiles&quot; &quot;$(TargetDir)DumpFiles\&quot;" />
   </Target>
+
+  
 
 </Project>

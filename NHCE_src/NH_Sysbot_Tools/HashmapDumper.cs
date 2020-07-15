@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using NHSE.Injection;
 using System.Linq;
+using System.IO;
 
 namespace NH_Sysbot_Tools
 {
@@ -14,6 +15,29 @@ namespace NH_Sysbot_Tools
         public static ulong offsetSizeMap = offsetMainIcon + 0xF4D0;
 
         static object _sync = new object();
+
+        public static Dictionary<string, int> GetMainInventoryIconHashmap(string filePathOfDump)
+        {
+            Dictionary<string, int> builtDic = new Dictionary<string, int>();
+            List<byte> bytes = new List<byte>(File.ReadAllBytes(filePathOfDump));
+
+            // check this is the start of the hashmap
+            KeyValuePair<string, int> startVal = PullKVPFrom8Bytes(bytes.Take(8).ToArray());
+            if (!isHashMapBoundary(startVal))
+                throw new Exception("This isn't the start of a hashmap, edit your dump so the start of a list is first.");
+
+            for (int i = 8; i < bytes.Count; i+=8)
+            {
+                byte[] new8Bytes = bytes.Skip(i).Take(8).ToArray();
+                KeyValuePair<string, int> newVal = PullKVPFrom8Bytes(new8Bytes);
+                if (!isHashMapBoundary(newVal))
+                    builtDic.Add(newVal.Key, newVal.Value);
+                else
+                    break;
+            }
+
+            return builtDic;
+        }
 
         public static Dictionary<string, int> GetMainInventoryIconHashmap(ulong offset)
         {
@@ -60,6 +84,33 @@ namespace NH_Sysbot_Tools
         {
             sb.SendRawBytes(SwitchCommand.PeekAbsolute(ramAddress, 8));
             byte[] received = sb.ReadRawBytes(8); // this returns chars
+            string strToWrite = "";
+            foreach (byte rec in received)
+                strToWrite += (char)rec;
+            strToWrite = strToWrite.Replace("\n", string.Empty);
+            Console.WriteLine(strToWrite);
+
+            string half1 = strToWrite.Substring(0, 8);
+            string half2 = strToWrite.Substring(8, 8);
+            string half1Sorted = string.Format("0x{0}", new string(fix32BitEndian(half1.ToCharArray())));
+            string half2Sorted = new string(fix32BitEndian(half2.ToCharArray()));
+            Console.WriteLine(half1Sorted + " is " + half2Sorted);
+
+            return new KeyValuePair<string, int>(half1Sorted, int.Parse(half2Sorted, System.Globalization.NumberStyles.HexNumber));
+        }
+
+        private static KeyValuePair<string, int> PullKVPFrom8Bytes(byte[] bytes)
+        {
+            // convert bytes to strings
+            byte[] sixteenChars = new byte[16];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                string hexVal = bytes[i].ToString("X2");
+                sixteenChars[i * 2] = (byte)hexVal[0];
+                sixteenChars[(i * 2) + 1] = (byte)hexVal[1];
+            }
+
+            byte[] received = sixteenChars;
             string strToWrite = "";
             foreach (byte rec in received)
                 strToWrite += (char)rec;

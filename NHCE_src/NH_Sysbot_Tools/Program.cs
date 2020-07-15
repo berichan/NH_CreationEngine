@@ -18,6 +18,7 @@ namespace NH_Sysbot_Tools
         // Don't edit these
         const string mainIconMapName = "mainIcon.berimap";
         const string sizeMapName = "size.berimap";
+        const string unitIconMapName = "unitIcon.berimap";
 
         // Edit these if you'd like. You'll need to put these into NH_CreationEngine/Dumpfiles. The functionality will print the map path at the end;
         static string outputMainPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -33,14 +34,13 @@ namespace NH_Sysbot_Tools
 
             HashmapDumper.sb.IP = IP; HashmapDumper.sb.Port = Port;
 
-            var dictionaryMainIcon = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetMainIcon);
-            //var dictionarySize = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetSizeMap);
+            //var dictionaryMainIcon = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetMainIcon);
+            //string outputPathFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
+            //writeoutDictionary(dictionaryMainIcon, outputPathFull);
 
-            string outputPathFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
-            writeoutDictionary(dictionaryMainIcon, outputPathFull);
-
-            //string outputPathSize = outputMainPath + Path.DirectorySeparatorChar + sizeMapName;
-            //writeoutDictionary(dictionarySize, outputPathSize);
+            var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\raw\Models_ItemParamAV");
+            string outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + unitIconMapName;
+            writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
         }
 
         static void writeoutDictionary<TKey, TValue>(Dictionary<TKey, TValue> dic, string outputPath)

@@ -8,7 +8,7 @@ namespace NH_CreationEngine
 {
     public static class PathHelper
     {
-        // no need to edit these unless the format has changed. Correct as of 1.2.1
+        // no need to edit these unless the format has changed. Correct as of 1.3.1
 
         public static Dictionary<string, string> Languages = new Dictionary<string, string>()
         {
@@ -68,10 +68,15 @@ namespace NH_CreationEngine
         public static string OutputPathSpritesRoot = OutputPath + Path.DirectorySeparatorChar + "Sprites";
         public static string OutputPathSpritesMain = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "Spritesbfres";
         public static string OutputPathPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "SpritePointer.txt";
+        public static string OutputPathMenuSpritesMain = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "Spritesbfres_menu";
+        public static string OutputPathMenuPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "SpritePointer_menu.txt";
+        public static string OutputPathUnitPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "ModelPointer_unit.txt";
+        public static string OutputPathUnitModelsMain = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "Modelsbfres_unit";
 
         /*** BCSV ***/
 
         // root of all bcsv
+        public static string BCSVPathRaw = Program.dumpPath + Path.DirectorySeparatorChar + "romfs" + Path.DirectorySeparatorChar + "Bcsv";
         public static string BCSVPath = Program.dumpPath + Path.DirectorySeparatorChar + "romBCSVfs" + Path.DirectorySeparatorChar + "Bcsv";
 
         // bcsvs of note, remember these are parsed using acnh dumper and have the csv extension
@@ -82,6 +87,7 @@ namespace NH_CreationEngine
         public static string BCSVItemRCPCItem = BCSVPath + Path.DirectorySeparatorChar + "ItemRemakeCommonPatternCategory.csv";
         public static string BCSVRecipeItem = BCSVPath + Path.DirectorySeparatorChar + "RecipeCraftParam.csv";
         public static string BCSVItemMenuIconItem = BCSVPath + Path.DirectorySeparatorChar + "ItemMenuIcon.csv";
+        public static string BCSVItemUnitIconItem = BCSVPath + Path.DirectorySeparatorChar + "ItemUnitIcon.csv";
         public static string BCSVItemKindItem = BCSVPath + Path.DirectorySeparatorChar + "ItemKind.csv";
         public static string BCSVItemSizeItem = BCSVPath + Path.DirectorySeparatorChar + "ItemSize.csv";
 
@@ -135,6 +141,7 @@ namespace NH_CreationEngine
         public const string DumpFileRoot = "DumpFiles";
         public static string MainIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "mainIcon.berimap";
         public static string SizeDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "size.berimap";
+        public static string UnitIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "unitIcon.berimap";
 
     }
 }

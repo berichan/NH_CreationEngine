@@ -13,7 +13,7 @@ namespace NH_CreationEngine
         const string SpriteFileRoot = LayoutRoot + "FtrIcon_";
         const string MenuSpriteFileRoot = LayoutRoot + "MenuIcon_";
 
-        public static void DoItemSearch()
+        public static void DoItemSearch(bool includeMenuItemMap = true)
         {
             Dictionary<string, string> ItemHexPath = new Dictionary<string, string>();
 
@@ -87,6 +87,9 @@ namespace NH_CreationEngine
             
 
             Console.WriteLine("Generated pointer file at: {0}", PathHelper.OutputPathPointerFile);
+
+            if (includeMenuItemMap)
+                GenerateMenuIconList();
         }
 
         private static string getSpriteFilename(DataTable dt, string dtFilenameColNm, string toSearchFor, string fullSearchString, List<string> allPossibleItemName, Dictionary<string, int> menuIconMap, DataTable menuIconTable, bool isVariation)
@@ -280,6 +283,84 @@ namespace NH_CreationEngine
                 return text;
             }
             return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+        }
+
+        public static void GenerateMenuIconList()
+        {
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, "0x54706054");
+            var menuIconTable = TableProcessor.LoadTable(PathHelper.BCSVItemMenuIconItem, (char)9, 2);
+            var menuIconMap = getMainIconMap();
+
+            List<string> allPossibleItemName = new List<string>(Directory.GetDirectories(PathHelper.ModelPath, MenuSpriteFileRoot + "*", SearchOption.TopDirectoryOnly)); // Layouts are icons
+
+            // variations don't matter with menu icons
+            Dictionary<int, string> itemIdPathMap = new Dictionary<int, string>();
+
+            foreach (DataRow row in table.Rows)
+            {
+                string itemId = row["0x54706054"].ToString();
+
+                // get the menu icon hash
+                string iconHash = row[28].ToString().Replace("\0", string.Empty);
+                int rowNum = menuIconMap[iconHash];
+                var menuIconRowNeeded = menuIconTable.Rows[rowNum];
+                string menuIconFilename = MenuSpriteFileRoot + menuIconRowNeeded[3].ToString().Replace("\0", string.Empty) + ".";
+                string fullPath = allPossibleItemName.Find(x => x.Contains(menuIconFilename));
+
+                itemIdPathMap.Add(int.Parse(itemId), fullPath);
+            }
+
+            // new pointer map
+            Dictionary<string, List<int>> pointerMap = new Dictionary<string, List<int>>();
+            foreach (var iPath in itemIdPathMap)
+            {
+                // create item name to file relation
+                if (pointerMap.ContainsKey(iPath.Value))
+                {
+                    // add us to the list of people that want this image
+                    var thisList = pointerMap[iPath.Value];
+                    thisList.Add(iPath.Key);
+                }
+                else
+                {
+                    // create a relation
+                    var newListWithUs = new List<int>();
+                    newListWithUs.Add(iPath.Key);
+                    pointerMap.Add(iPath.Value, newListWithUs);
+                }
+            }
+
+            // create the files, naming them the first thing in the list
+            if (Directory.Exists(PathHelper.OutputPathMenuSpritesMain))
+                Directory.Delete(PathHelper.OutputPathMenuSpritesMain, true); // we are copying files here so this needs to go
+
+            Directory.CreateDirectory(PathHelper.OutputPathMenuSpritesMain);
+
+            Dictionary<string, List<int>> writtenFileMap = new Dictionary<string, List<int>>();
+            foreach (var pm in pointerMap)
+            {
+                // get the file
+                if (pm.Key == string.Empty)
+                    continue;
+                string[] files = Directory.GetFiles(pm.Key, "*.bfres", SearchOption.AllDirectories);
+                string fileWanted = new List<string>(files).Find(x => x.Contains("output.bfres", StringComparison.OrdinalIgnoreCase));
+                // copy file to output directory
+                string newFileName = pm.Value[0].ToString("X");
+                string newFilePath = PathHelper.OutputPathMenuSpritesMain + Path.DirectorySeparatorChar + newFileName + ".bfres";
+                File.Copy(fileWanted, newFilePath);
+                Console.WriteLine("Copied {0} to {1}", fileWanted, newFilePath);
+                // add to map
+                writtenFileMap.Add(newFileName, pm.Value);
+            }
+
+            // create pointer file
+            using (StreamWriter file = new StreamWriter(PathHelper.OutputPathMenuPointerFile, false))
+                foreach (var wf in writtenFileMap)
+                    foreach (var s in wf.Value)
+                        file.WriteLine("{0},{1}", s.ToString("X"), wf.Key);
+
+
+            Console.WriteLine("Generated pointer file at: {0}", PathHelper.OutputPathMenuPointerFile);
         }
 
         // functions that were used to bruteforce, are no longer required
