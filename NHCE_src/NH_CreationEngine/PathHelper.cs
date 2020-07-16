@@ -71,6 +71,7 @@ namespace NH_CreationEngine
         public static string OutputPathMenuSpritesMain = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "Spritesbfres_menu";
         public static string OutputPathMenuPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "SpritePointer_menu.txt";
         public static string OutputPathUnitPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "ModelPointer_unit.txt";
+        public static string OutputPathBeriUnitPointerFile = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "BeriPointer_unit.txt";
         public static string OutputPathUnitModelsMain = OutputPathSpritesRoot + Path.DirectorySeparatorChar + "Modelsbfres_unit";
 
         /*** BCSV ***/
@@ -137,11 +138,13 @@ namespace NH_CreationEngine
 
         public static string GetFullOutputPathTo(string templatePath) => templatePath.Replace(TemplateRoot, OutputPath).Replace(TemplateCsExt, RequiredCsExt);
 
-        /*** Hashmaps generated using NH_Sysbot_Tools or dumped from game files ***/
+        /*** Hashmaps generated using NH_Sysbot_Tools or dumped from game files, or made by me meticulously ***/
         public const string DumpFileRoot = "DumpFiles";
         public static string MainIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "mainIcon.berimap";
         public static string SizeDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "size.berimap";
         public static string UnitIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "unitIcon.berimap";
+        public static string MasterTranslator = DumpFileRoot + Path.DirectorySeparatorChar + "translationtextmaster.txt";
+        public static string AdditionalFlowerMapName = DumpFileRoot + Path.DirectorySeparatorChar + "AdditionalPointerMap.txt";
 
     }
 }

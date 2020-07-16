@@ -18,7 +18,7 @@ namespace NH_CreationEngine
         static void Main(string[] args)
         {
             //ShowNMTFile();
-            //Util.SearchAllBCSVFor("WParcelBlue");
+            //Util.SearchAllBCSVFor("123");
             //Util.PrintBigFolders(PathHelper.ModelPath);
 
             //SpriteCreationEngine.GenerateMenuIconList();
@@ -29,10 +29,12 @@ namespace NH_CreationEngine
 
             //ModelCreationEngine.DoItemSearchUnitIcon();
 
+            //PointerCreationEngine.GenerateUnitIconPointer();
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\Manual", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\imagedump_manual.dmp");
 
             //var watch = System.Diagnostics.Stopwatch.StartNew();
             //BCSVHelper.RedumpBCSV();
-            //DoEverything();
+            DoEverything();
             //watch.Stop();
             //Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
         }

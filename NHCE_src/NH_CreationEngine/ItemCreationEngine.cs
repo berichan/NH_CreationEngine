@@ -1,6 +1,7 @@
 ﻿using MsbtLite;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -189,15 +190,71 @@ namespace NH_CreationEngine
             foreach (var kvpItem in ID_ItemTable)
                 if (kvpItem.Key > largestNumber)
                     largestNumber = kvpItem.Key;
-            
+
 
             // write to file using empties where there are no items
+            // but first get everything we didn't find from the ItemParam table
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, "0x54706054");
+            Dictionary<int, string> itemNameJapNameDic = new Dictionary<int, string>();
+            foreach (DataRow row in table.Rows)
+            {
+                string itemId = row["0x54706054"].ToString();
+                int itemAsId = int.Parse(itemId) + 1;
+
+                // get jap name
+                string japName = row["0xB8CC232C"].ToString().Replace("\0", string.Empty);
+                itemNameJapNameDic.Add(itemAsId, japName);
+            }
+
+            int paramLargestNumber = itemNameJapNameDic.ElementAt(itemNameJapNameDic.Count - 1).Key;
+            largestNumber = Math.Max(largestNumber, paramLargestNumber);
+
+            // load the translation master
+            string[] translationMaster = File.ReadAllLines(PathHelper.MasterTranslator);
             string[] lines = new string[largestNumber + 1];
-            for (int i = 0; i < largestNumber+1; ++i)
-                lines[i] = ID_ItemTable.ContainsKey(i) ? ID_ItemTable[i] : "\r\n";
+            List<string> translationsTemp = new List<string>();
+            int translationRequests = 0;
+            for (int i = 0; i < largestNumber + 1; ++i)
+            {
+                if (ID_ItemTable.ContainsKey(i))
+                {
+                    if (i != 0 && ID_ItemTable[i].JapanesePercentage() > 0.3f && translationMaster[i - 1] != string.Empty && (language != "jp" && language != "zht" && language != "zhs" && language != "ko"))
+                    {
+                        // this is probably japanese in the msbt
+                        string n = translationMaster[i - 1];
+                        if (!n.EndsWith("(internal)", StringComparison.OrdinalIgnoreCase))
+                            n += " (internal)";
+                        lines[i] = n + "\r\n";
+                        translationsTemp.Add(n + ", " + (i-1).ToString("X") + "  \r\n");
+                    }
+                    else
+                        lines[i] = ID_ItemTable[i];
+                }
+                else if (itemNameJapNameDic.ContainsKey(i))
+                {
+                    if (translationMaster[i - 1] != string.Empty && (language != "jp" && language != "zht" && language != "zhs" && language != "ko"))
+                    {
+                        string n = translationMaster[i - 1];
+                        if (!n.EndsWith("(internal)", StringComparison.OrdinalIgnoreCase))
+                            n += " (internal)";
+                        lines[i] = n + "\r\n";
+                        translationsTemp.Add(n + ", " + (i - 1).ToString("X") + "  \r\n");
+                    }
+                    else
+                        lines[i] = itemNameJapNameDic[i] + "\r\n";
+
+                    translationRequests++;
+                }
+                else
+                    lines[i] = "\r\n";
+            }
+
+            Console.WriteLine("{0} translation requests: {1}", language, translationRequests);
 
             if (writeToFile)
                 WriteOutFile(PathHelper.OutputPath, language, itemListRootName + language + ".txt", string.Join("", lines));
+            if (language == "en")
+                WriteOutFile(PathHelper.OutputPath, "strings", itemListRootName + language + ".txt", string.Join("", translationsTemp));
 
             if (language == "en")
                 itemLines = lines;

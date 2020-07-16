@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="Template_cs\" />
+    <Folder Include="Tools\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
