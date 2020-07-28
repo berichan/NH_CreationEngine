@@ -25,7 +25,7 @@ namespace NH_CreationEngine
             //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\Spritesbfres_menu\processed", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\imagedump_menu.dmp");
 
             //SpriteCreationEngine.DoItemSearch();
-            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\Spritesbfres\processed", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\imagedump.dmp");
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\Spritesbfres\processed_quant", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\imagedump.dmp");
 
             //ModelCreationEngine.DoItemSearchUnitIcon();
 
@@ -33,8 +33,9 @@ namespace NH_CreationEngine
             //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\Manual", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\Output\Sprites\imagedump_manual.dmp");
 
             //var watch = System.Diagnostics.Stopwatch.StartNew();
-            //BCSVHelper.RedumpBCSV();
-            DoEverything();
+            BCSVHelper.RedumpBCSV();
+            //BCSVHelper.CreateMenuIconParam(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_3_0\romBCSVfs\Bcsv\text\menuicon.txt");
+            //DoEverything();
             //watch.Stop();
             //Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
         }
@@ -56,6 +57,7 @@ namespace NH_CreationEngine
             ClassCreationEngine.CreateRemakeInfoData();
             ClassCreationEngine.CreateRemakeUtil();
             ClassCreationEngine.CreateRecipeUtil();
+            ClassCreationEngine.CreateMenuIcon();
         }
 
         // Example functions

@@ -212,7 +212,10 @@ namespace NH_CreationEngine
             // load the translation master
             string[] translationMaster = File.ReadAllLines(PathHelper.MasterTranslator);
             string[] lines = new string[largestNumber + 1];
+
             List<string> translationsTemp = new List<string>();
+            List<string> translationsHexes = new List<string>();
+
             int translationRequests = 0;
             for (int i = 0; i < largestNumber + 1; ++i)
             {
@@ -226,6 +229,7 @@ namespace NH_CreationEngine
                             n += " (internal)";
                         lines[i] = n + "\r\n";
                         translationsTemp.Add(n + ", " + (i-1).ToString("X") + "  \r\n");
+                        translationsHexes.Add((i - 1).ToString("X") + "\r\n");
                     }
                     else
                         lines[i] = ID_ItemTable[i];
@@ -239,6 +243,7 @@ namespace NH_CreationEngine
                             n += " (internal)";
                         lines[i] = n + "\r\n";
                         translationsTemp.Add(n + ", " + (i - 1).ToString("X") + "  \r\n");
+                        translationsHexes.Add((i - 1).ToString("X") + "\r\n");
                     }
                     else
                         lines[i] = itemNameJapNameDic[i] + "\r\n";
@@ -254,7 +259,10 @@ namespace NH_CreationEngine
             if (writeToFile)
                 WriteOutFile(PathHelper.OutputPath, language, itemListRootName + language + ".txt", string.Join("", lines));
             if (language == "en")
-                WriteOutFile(PathHelper.OutputPath, "strings", itemListRootName + language + ".txt", string.Join("", translationsTemp));
+            {
+                WriteOutFile(PathHelper.OutputPath, "strings", "InternalItemList.txt", string.Join("", translationsTemp));
+                WriteOutFile(PathHelper.OutputPath, "strings", "InternalHexList.txt", string.Join("", translationsHexes));
+            }
 
             if (language == "en")
                 itemLines = lines;

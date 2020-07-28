@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -222,7 +223,7 @@ namespace NH_CreationEngine
             return build;
         }
 
-        private static Dictionary<string, int> getMainIconMap()
+        public static Dictionary<string, int> getMainIconMap()
         {
             string mainIconHashPath = PathHelper.MainIconDumpName;
             if (!File.Exists(mainIconHashPath))
@@ -295,6 +296,7 @@ namespace NH_CreationEngine
 
             // variations don't matter with menu icons
             Dictionary<int, string> itemIdPathMap = new Dictionary<int, string>();
+            Dictionary<string, string> menuIconEnumPathMap = new Dictionary<string, string>();
 
             foreach (DataRow row in table.Rows)
             {
@@ -308,6 +310,8 @@ namespace NH_CreationEngine
                 string fullPath = allPossibleItemName.Find(x => x.Contains(menuIconFilename));
 
                 itemIdPathMap.Add(int.Parse(itemId), fullPath);
+                if (!menuIconEnumPathMap.ContainsKey(menuIconRowNeeded[1].ToString().Replace("\0", string.Empty)))
+                    menuIconEnumPathMap.Add(menuIconRowNeeded[1].ToString().Replace("\0", string.Empty), fullPath);
             }
 
             // new pointer map
@@ -351,6 +355,25 @@ namespace NH_CreationEngine
                 Console.WriteLine("Copied {0} to {1}", fileWanted, newFilePath);
                 // add to map
                 writtenFileMap.Add(newFileName, pm.Value);
+            }
+
+            // for NHSE
+            if (!Directory.Exists(PathHelper.OutputPathMenuSpritesMain + Path.DirectorySeparatorChar + "OriginalNames"))
+                Directory.CreateDirectory(PathHelper.OutputPathMenuSpritesMain + Path.DirectorySeparatorChar + "OriginalNames");
+            foreach (var iPath in itemIdPathMap)
+            {
+                if (iPath.Value == string.Empty)
+                    continue;
+                string[] files = Directory.GetFiles(iPath.Value, "*.bfres", SearchOption.AllDirectories);
+                string fileWanted = new List<string>(files).Find(x => x.Contains("output.bfres", StringComparison.OrdinalIgnoreCase));
+                string nameToUse = menuIconEnumPathMap.FirstOrDefault(x => x.Value == iPath.Value).Key;
+                if (nameToUse == null)
+                    continue;
+                string outputPath = PathHelper.OutputPathMenuSpritesMain + Path.DirectorySeparatorChar + "OriginalNames" + Path.DirectorySeparatorChar + nameToUse + ".bfres";
+                if (File.Exists(outputPath))
+                    continue;
+                File.Copy(fileWanted, outputPath);
+                Console.WriteLine("Copied {0} to {1}", fileWanted, outputPath);
             }
 
             // create pointer file

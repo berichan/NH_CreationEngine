@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHSE.Core;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -16,8 +17,10 @@ namespace NH_CreationEngine
         private const string itemRemakeRootName = "ItemRemakeInfoData";
         private const string itemRemakeUtilRootName = "ItemRemakeUtil";
         private const string itemRecipeRootName = "RecipeList";
+        private const string itemMenuIconRootName = "ItemMenuIconType";
 
         private const string itemKindBytesFilename = "item_kind.bin";
+        private const string itemMenuIconFilename = "item_menuicon.bin";
 
         // stuff that we keep because other things use it
         public static List<string> ItemKindList;
@@ -28,6 +31,40 @@ namespace NH_CreationEngine
         public static void CreateRCPC() => createEnumFillerClass(1, PathHelper.BCSVItemRCPCItem, itemRCPCRootName, 2);
         public static void CreateRCP() => createEnumFillerClass(4, PathHelper.BCSVItemRCPItem, itemRCPRootName, 6, "FtrCmnFabric");
         public static void CreateCustomColor() => createEnumFillerClass(0, PathHelper.BCSVItemColorItem, itemColorRootName, 1, "", 2);
+        public static List<string> CreateMenuIcon() => createEnumFillerClass(0, PathHelper.BCSVItemMenuIconItem, itemMenuIconRootName, 3, "", 2, true);
+
+        public static void CreateUshortDataMenuIcon()
+        {
+            var list = CreateMenuIcon();
+            var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, "0x54706054");
+            var menuIconTable = TableProcessor.LoadTable(PathHelper.BCSVItemMenuIconItem, (char)9, 2);
+            var menuIconMap = SpriteCreationEngine.getMainIconMap();
+
+            string[] itemLines = ItemCreationEngine.ItemLines;
+            ushort[] toWrite = new ushort[itemLines.Length];
+            for (int i = 0; i < itemLines.Length; ++i)
+            {
+                DataRow nRow = table.Rows.Find(i.ToString());
+                if (nRow != null)
+                {
+                    string iconHash = nRow[28].ToString().Replace("\0", string.Empty);
+                    int rowNum = menuIconMap[iconHash];
+                    var menuIconRowNeeded = menuIconTable.Rows[rowNum];
+                    string menuIconFilename = menuIconRowNeeded[3].ToString().Replace("\0", string.Empty);
+                    var toAdd = (ushort)list.IndexOf(menuIconFilename.TrimEnd());
+                    toWrite[i] = toAdd;
+                    if (i == 6691)
+                        break;
+                }
+                else
+                    toWrite[i] = 0;
+            }
+
+            byte[] bytes = new byte[toWrite.Length * 2];
+            Buffer.BlockCopy(toWrite, 0, bytes, 0, toWrite.Length * 2);
+            File.WriteAllBytes(PathHelper.OutputPathBytes + Path.DirectorySeparatorChar + itemMenuIconFilename, bytes);
+            Console.WriteLine("Wrote {0} to {1}.", itemMenuIconFilename, PathHelper.OutputPathBytes + Path.DirectorySeparatorChar + itemMenuIconFilename);
+        }
 
         public static void CreateItemKind(bool writeToFile = true)
         {
@@ -192,7 +229,7 @@ namespace NH_CreationEngine
 
         }
 
-        private static void createEnumFillerClass(int id, string bscvPath, string filename, int itemRow, string replaceWithNothing = "", int commentRow = -1)
+        private static List<string> createEnumFillerClass(int id, string bscvPath, string filename, int itemRow, string replaceWithNothing = "", int commentRow = -1, bool sort = false)
         {
             var table = TableProcessor.LoadTable(bscvPath, (char)9, id);
             string templatePath = PathHelper.GetFullTemplatePathTo(filename);
@@ -202,6 +239,7 @@ namespace NH_CreationEngine
             int tabCount = countCharsBefore(preClass, "{data}");
 
             List<string> kinds = new List<string>();
+            List<string> rawData = new List<string>();
             foreach (DataRow row in table.Rows)
             {
                 string extract = row[itemRow].ToString();
@@ -210,13 +248,31 @@ namespace NH_CreationEngine
                     extractComment = @" // " + row[commentRow].ToString().Replace("\0", string.Empty);
 
                 string root = extract.Replace("\0", string.Empty);
+
+                if (root == string.Empty || root == "\0")
+                    continue;
+
                 if (replaceWithNothing != "")
                     root = root.Replace(replaceWithNothing, string.Empty);
-                extract = root + " = " + kinds.Count.ToString() + "," + extractComment + "\r\n";
+
+                if (!sort)
+                    extract = root + " = " + kinds.Count.ToString() + "," + extractComment + "\r\n";
+                else
+                    extract = root + "," + extractComment + "\r\n";
+
                 for (int i = 0; i < tabCount; ++i)
                     extract = extract + ' ';
                 if (!kinds.Contains(extract))
+                {
                     kinds.Add(extract);
+                    rawData.Add(root);
+                }
+            }
+
+            if (sort)
+            {
+                kinds.Sort();
+                rawData.Sort();
             }
 
             string kindAtEnd = kinds[kinds.Count - 1].Split("\r\n")[0]; // remove trails from last item
@@ -225,6 +281,8 @@ namespace NH_CreationEngine
             preClass = replaceData(preClass, string.Join("", kinds));
 
             writeOutFile(outputPath, preClass);
+
+            return rawData;
         }
 
         private static void writeOutFile(string pathToFile, string data)
