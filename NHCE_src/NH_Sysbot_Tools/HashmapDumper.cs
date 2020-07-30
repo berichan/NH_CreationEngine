@@ -177,7 +177,7 @@ namespace NH_Sysbot_Tools
 
         private static bool isHashMapBoundary(KeyValuePair<string, int> toCheck)
         {
-            return toCheck.Key == "0x00000001" && toCheck.Value == 0;
+            return (toCheck.Key == "0x00000001" && toCheck.Value == 0) || (toCheck.Key == "0x00000000" && toCheck.Value == 1);
         }
     }
 }

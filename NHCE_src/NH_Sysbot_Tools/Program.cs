@@ -38,8 +38,12 @@ namespace NH_Sysbot_Tools
             //string outputPathFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
             //writeoutDictionary(dictionaryMainIcon, outputPathFull);
 
-            var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\raw\Models_ItemParamAV");
+            var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_4_0\RawDumps\UnitIcon.Dmp");
             string outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + unitIconMapName;
+            writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
+
+            dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_4_0\RawDumps\MenuIcon.dmp");
+            outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
             writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
         }
 

@@ -221,29 +221,40 @@ namespace NH_CreationEngine
             {
                 if (ID_ItemTable.ContainsKey(i))
                 {
-                    if (i != 0 && ID_ItemTable[i].JapanesePercentage() > 0.3f && translationMaster[i - 1] != string.Empty && (language != "jp" && language != "zht" && language != "zhs" && language != "ko"))
+                    if (i < translationMaster.Length)
                     {
-                        // this is probably japanese in the msbt
-                        string n = translationMaster[i - 1];
-                        if (!n.EndsWith("(internal)", StringComparison.OrdinalIgnoreCase))
-                            n += " (internal)";
-                        lines[i] = n + "\r\n";
-                        translationsTemp.Add(n + ", " + (i-1).ToString("X") + "  \r\n");
-                        translationsHexes.Add((i - 1).ToString("X") + "\r\n");
+                        if (i != 0 && ID_ItemTable[i].JapanesePercentage() > 0.3f && translationMaster[i - 1] != string.Empty && (language != "jp" && language != "zht" && language != "zhs" && language != "ko"))
+                        {
+                            // this is probably japanese in the msbt
+                            string n = translationMaster[i - 1];
+                            if (!n.EndsWith("(internal)", StringComparison.OrdinalIgnoreCase))
+                                n += " (internal)";
+                            lines[i] = n + "\r\n";
+                            translationsTemp.Add(n + ", " + (i - 1).ToString("X") + "  \r\n");
+                            translationsHexes.Add((i - 1).ToString("X") + "\r\n");
+                        }
+                        else
+                            lines[i] = ID_ItemTable[i];
                     }
                     else
                         lines[i] = ID_ItemTable[i];
+
                 }
                 else if (itemNameJapNameDic.ContainsKey(i))
                 {
-                    if (translationMaster[i - 1] != string.Empty && (language != "jp" && language != "zht" && language != "zhs" && language != "ko"))
+                    if (i < translationMaster.Length)
                     {
-                        string n = translationMaster[i - 1];
-                        if (!n.EndsWith("(internal)", StringComparison.OrdinalIgnoreCase))
-                            n += " (internal)";
-                        lines[i] = n + "\r\n";
-                        translationsTemp.Add(n + ", " + (i - 1).ToString("X") + "  \r\n");
-                        translationsHexes.Add((i - 1).ToString("X") + "\r\n");
+                        if (translationMaster[i - 1] != string.Empty && (language != "jp" && language != "zht" && language != "zhs" && language != "ko"))
+                        {
+                            string n = translationMaster[i - 1];
+                            if (!n.EndsWith("(internal)", StringComparison.OrdinalIgnoreCase))
+                                n += " (internal)";
+                            lines[i] = n + "\r\n";
+                            translationsTemp.Add(n + ", " + (i - 1).ToString("X") + "  \r\n");
+                            translationsHexes.Add((i - 1).ToString("X") + "\r\n");
+                        }
+                        else
+                            lines[i] = itemNameJapNameDic[i] + "\r\n";
                     }
                     else
                         lines[i] = itemNameJapNameDic[i] + "\r\n";
