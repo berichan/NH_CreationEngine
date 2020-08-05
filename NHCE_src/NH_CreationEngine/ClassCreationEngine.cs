@@ -31,7 +31,7 @@ namespace NH_CreationEngine
         public static void CreateRCPC() => createEnumFillerClass(1, PathHelper.BCSVItemRCPCItem, itemRCPCRootName, 2);
         public static void CreateRCP() => createEnumFillerClass(4, PathHelper.BCSVItemRCPItem, itemRCPRootName, 6, "FtrCmnFabric");
         public static void CreateCustomColor() => createEnumFillerClass(0, PathHelper.BCSVItemColorItem, itemColorRootName, 1, "", 2);
-        public static List<string> CreateMenuIcon() => createEnumFillerClass(0, PathHelper.BCSVItemMenuIconItem, itemMenuIconRootName, 3, "", 2, true);
+        public static List<string> CreateMenuIcon() => createEnumFillerClass(0, PathHelper.BCSVItemMenuIconItem, itemMenuIconRootName, 1, "", -1, true);
 
         public static void CreateUshortDataMenuIcon()
         {

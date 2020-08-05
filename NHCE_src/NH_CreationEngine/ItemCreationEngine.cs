@@ -196,6 +196,7 @@ namespace NH_CreationEngine
             // but first get everything we didn't find from the ItemParam table
             var table = TableProcessor.LoadTable(PathHelper.BCSVItemParamItem, (char)9, "0x54706054");
             Dictionary<int, string> itemNameJapNameDic = new Dictionary<int, string>();
+            Dictionary<int, string> translationTypes = new Dictionary<int, string>();
             foreach (DataRow row in table.Rows)
             {
                 string itemId = row["0x54706054"].ToString();
@@ -204,6 +205,10 @@ namespace NH_CreationEngine
                 // get jap name
                 string japName = row["0xB8CC232C"].ToString().Replace("\0", string.Empty);
                 itemNameJapNameDic.Add(itemAsId, japName);
+
+                //get type
+                string type = row["0xFC275E86"].ToString().Replace("\0", string.Empty);
+                translationTypes.Add(itemAsId, type);
             }
 
             int paramLargestNumber = itemNameJapNameDic.ElementAt(itemNameJapNameDic.Count - 1).Key;
@@ -214,15 +219,17 @@ namespace NH_CreationEngine
             string[] lines = new string[largestNumber + 1];
 
             List<string> translationsTemp = new List<string>();
+            List<string> translationsTempWithType = new List<string>();
             List<string> translationsHexes = new List<string>();
 
+            // this can and should be cleaned up
             int translationRequests = 0;
             for (int i = 0; i < largestNumber + 1; ++i)
             {
                 if (ID_ItemTable.ContainsKey(i))
                 {
                     if (i < translationMaster.Length)
-                    {
+                    {   // the below if statement is incorrect (indexes are wrong) but I haven't had time to clean it up
                         if (i != 0 && ID_ItemTable[i].JapanesePercentage() > 0.3f && translationMaster[i - 1] != string.Empty && (language != "jp" && language != "zht" && language != "zhs" && language != "ko"))
                         {
                             // this is probably japanese in the msbt
@@ -230,8 +237,9 @@ namespace NH_CreationEngine
                             if (!n.EndsWith("(internal)", StringComparison.OrdinalIgnoreCase))
                                 n += " (internal)";
                             lines[i] = n + "\r\n";
-                            translationsTemp.Add(n + ", " + (i - 1).ToString("X") + "  \r\n");
+                            translationsTemp.Add(n + ", " + (i - 1).ToString("X").PadLeft(4, '0') + "  \r\n");
                             translationsHexes.Add((i - 1).ToString("X") + "\r\n");
+                            translationsTempWithType.Add(n.PadRight(60, ' ') + (char)2 + itemNameJapNameDic[i].PadRight(30, ' ') + (char)2 + translationTypes[i].PadRight(25, ' ') + (char)2 + (i - 1).ToString("X").PadLeft(4, '0') + (char)2 + (i - 1).ToString().PadLeft(5, '0') + "  \r\n"); // char 2 is easier to split
                         }
                         else
                             lines[i] = ID_ItemTable[i];
@@ -250,8 +258,9 @@ namespace NH_CreationEngine
                             if (!n.EndsWith("(internal)", StringComparison.OrdinalIgnoreCase))
                                 n += " (internal)";
                             lines[i] = n + "\r\n";
-                            translationsTemp.Add(n + ", " + (i - 1).ToString("X") + "  \r\n");
+                            translationsTemp.Add(n + ", " + (i - 1).ToString("X").PadLeft(4, '0') + "  \r\n");
                             translationsHexes.Add((i - 1).ToString("X") + "\r\n");
+                            translationsTempWithType.Add(n.PadRight(60, ' ') + (char)2 + itemNameJapNameDic[i].PadRight(30, ' ') + (char)2 + translationTypes[i].PadRight(25, ' ') + (char)2 + (i - 1).ToString("X").PadLeft(4, '0') + (char)2 + (i - 1).ToString().PadLeft(5, '0') + "  \r\n"); // char 2 is easier to split
                         }
                         else
                             lines[i] = itemNameJapNameDic[i] + "\r\n";
@@ -267,12 +276,19 @@ namespace NH_CreationEngine
 
             Console.WriteLine("{0} translation requests: {1}", language, translationRequests);
 
+            // sort by name then type
+            translationsTempWithType = translationsTempWithType.OrderBy(x => x.Split((char)2)[0]).ToList();
+            translationsTempWithType = translationsTempWithType.OrderBy(x => x.Split((char)2)[2]).ToList();
+            for (int i = 0; i < translationsTempWithType.Count; ++i)
+                translationsTempWithType[i] = "| " + translationsTempWithType[i].Replace(((char)2).ToString(), " | ").Replace("\r\n", " |\r\n"); // github markdown
+
             if (writeToFile)
                 WriteOutFile(PathHelper.OutputPath, language, itemListRootName + language + ".txt", string.Join("", lines));
             if (language == "en")
             {
                 WriteOutFile(PathHelper.OutputPath, "strings", "InternalItemList.txt", string.Join("", translationsTemp));
                 WriteOutFile(PathHelper.OutputPath, "strings", "InternalHexList.txt", string.Join("", translationsHexes));
+                WriteOutFile(PathHelper.OutputPath, "strings", "InternalItemListSorted.txt", string.Join("", translationsTempWithType));
             }
 
             if (language == "en")
