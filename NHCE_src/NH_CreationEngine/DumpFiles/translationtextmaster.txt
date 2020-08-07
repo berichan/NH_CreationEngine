@@ -5941,9 +5941,9 @@ horned dynastid model
 
 golden dung beetle
 
-tom nook's summer top (internal)
+timmy nook's summer top (internal)
 tiger butterfly model
-tom nook's winter top (internal)
+timmy nook's winter top (internal)
 New Year's silk hat (Red)
 New Year's silk hat (Blue)
 New Year's silk hat (Yellow)
