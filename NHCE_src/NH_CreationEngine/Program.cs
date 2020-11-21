@@ -10,7 +10,7 @@ namespace NH_CreationEngine
     class Program
     {
         //edit this
-        public const string dumpPath = @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_5_0\"; // should have your romBCSVfs and romSARCfs in it. Use https://github.com/berichan/ACNH_Dumper
+        public const string dumpPath = @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_6_0\"; // should have your romBCSVfs and romSARCfs in it. Use https://github.com/berichan/ACNH_Dumper
 
         // Requires you to dump your own menu icon map using sysbot on your switch using the other project in this solution (NH_Sysbot_Tools) and move the berimap file it creates into /NH_CreationEngine/Dumpfiles/mainIcon.berimap 
         // once you get your items filtered you may use my fork of switch toolbox to batch convert textures, this preserves filenames (untick both top options, one of them is creating new folder which you don't need) https://github.com/berichan/Switch-Toolbox
@@ -21,10 +21,10 @@ namespace NH_CreationEngine
             //Util.PrintBigFolders(PathHelper.ModelPath);
 
             //SpriteCreationEngine.GenerateMenuIconList();
-            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_5_0\Output\Sprites\Spritesbfres_menu\output", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_5_0\Output\Sprites\imagedump_menu.dmp");
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_6_0\Output\Sprites\Spritesbfres_menu\output", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_6_0\Output\Sprites\imagedump_menu.dmp");
 
             //SpriteCreationEngine.DoItemSearch();
-            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\Images_Master", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_5_0\Output\Sprites\imagedump.dmp");
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\Images_Master", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_6_0\Output\Sprites\imagedump.dmp");
 
             //ModelCreationEngine.DoItemSearchUnitIcon();
 
@@ -32,8 +32,8 @@ namespace NH_CreationEngine
             //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\Images_UnitIcon_Master", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_4_0\Output\Sprites\imagedump_manual.dmp");
 
             //var watch = System.Diagnostics.Stopwatch.StartNew();
-            //BCSVHelper.RedumpBCSV();
-            //BCSVHelper.CreateMenuIconParam(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_4_0\romBCSVfs\Bcsv\text\menuicon.txt");
+            BCSVHelper.RedumpBCSV();
+            BCSVHelper.CreateMenuIconParam(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_6_0\romBCSVfs\Bcsv\text\menuicon.txt");
             //DoEverything();
             //watch.Stop();
             //Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
