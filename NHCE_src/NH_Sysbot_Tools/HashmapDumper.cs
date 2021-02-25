@@ -138,6 +138,18 @@ namespace NH_Sysbot_Tools
             return ulong.Parse(val, System.Globalization.NumberStyles.HexNumber);
         }
 
+        public static ulong getTitleId()
+        {
+            sb.SendRawBytes(SwitchCommand.Encode("getTitleID"));
+            byte[] received = sb.ReadRawBytes(16);
+            List<char> chars = new List<char>();
+            foreach (byte b in received)
+                chars.Add((char)b);
+            string val = new string(chars.ToArray()).Replace("\0", string.Empty).Replace("\n", string.Empty);
+            Console.WriteLine("tid: " + val);
+            return ulong.Parse(val, System.Globalization.NumberStyles.HexNumber);
+        }
+
         private static char[] fix32BitEndian(char[] eigthChars)
         {
             List<char[]> twoByteList = new List<char[]>();
@@ -173,6 +185,46 @@ namespace NH_Sysbot_Tools
 
             Console.WriteLine(txt);
             Console.WriteLine("******************************************************************************************************************");
+        }
+
+        public static void PrintMainPlusOffset(ulong offset, int size)
+        {
+            sb.Connect(sb.IP, sb.Port);
+
+            Thread.Sleep(1000);
+
+            var tid = getTitleId();
+            var mainAt = getMainNsoBase();
+            sb.SendRawBytes(SwitchCommand.PeekAbsolute(mainAt+offset, size));
+            byte[] received = sb.ReadRawBytes(size); // this returns chars
+            string strToWrite = "";
+            foreach (byte rec in received)
+                strToWrite += (char)rec;
+            strToWrite = strToWrite.Replace("\n", string.Empty);
+            Console.WriteLine(strToWrite);
+        }
+
+        public static void SendRawEncoded(string encode, bool expectReturn = false, bool connect = true)
+        {
+            if (connect)
+            {
+                sb.Connect(sb.IP, sb.Port);
+
+                Thread.Sleep(1000);
+            }
+            else
+                Thread.Sleep(16);
+            sb.SendRawBytes(SwitchCommand.Encode(encode));
+
+            if (expectReturn)
+            {
+                byte[] received = sb.ReadRawBytes(200); // this returns chars
+                string strToWrite = "";
+                foreach (byte rec in received)
+                    strToWrite += (char)rec;
+                strToWrite = strToWrite.Replace("\n", string.Empty);
+                Console.WriteLine(strToWrite);
+            }
         }
 
         private static bool isHashMapBoundary(KeyValuePair<string, int> toCheck)

@@ -1,4 +1,5 @@
-﻿using NHSE.Core;
+﻿using MsbtLite;
+using NHSE.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,6 +19,7 @@ namespace NH_CreationEngine
         private const string itemRemakeUtilRootName = "ItemRemakeUtil";
         private const string itemRecipeRootName = "RecipeList";
         private const string itemMenuIconRootName = "ItemMenuIconType";
+        private const string itemReactionRootName = "Reaction";
 
         private const string itemKindBytesFilename = "item_kind.bin";
         private const string itemMenuIconFilename = "item_menuicon.bin";
@@ -204,6 +206,52 @@ namespace NH_CreationEngine
             preClass = replaceData(preClass, string.Join("", remakeRow));
             if (writeToFile)
                 writeOutFile(outputPath, preClass);
+        }
+
+        public static void CreateReaction()
+        {
+            var table = TableProcessor.LoadTable(PathHelper.BCSVHumanAnimItem, (char)9, 3);
+            MSBT loadedMSBT = TableProcessor.LoadMSBT(PathHelper.GetReactionNameItem(PathHelper.Languages["en"]));
+            string templatePath = PathHelper.GetFullTemplatePathTo(itemReactionRootName);
+            string outputPath = PathHelper.GetFullOutputPathTo(templatePath);
+            string preClass = File.ReadAllText(templatePath);
+
+            // player animations only
+            Dictionary<int, string> tableEntries = new Dictionary<int, string>();
+            foreach (DataRow row in table.Rows)
+            {
+                if (row["0x2C447591"].ToString().StartsWith("MaRe"))
+                {
+                    tableEntries.Add(int.Parse(row["0x54706054"].ToString()), row["0x2C447591"].ToString());
+                }
+            }
+
+            var dicSort = tableEntries.OrderBy(a => a.Key).ToList();
+            tableEntries = new Dictionary<int, string>();
+            foreach (var kvp in dicSort)
+                tableEntries.Add(kvp.Key, kvp.Value);
+
+            List<string> entries = new List<string>();
+            // fill with empties
+            for (int i = 0; i < tableEntries.Count + 1; ++i)
+                entries.Add(string.Format("\t\tUNUSED_{0},\r\n", i));
+
+            // now instert with correct indexes
+            for (int i = 0; i < loadedMSBT.LBL1.Labels.Count; ++i)
+            {
+                var currLabel = loadedMSBT.LBL1.Labels[i];
+                string comment = currLabel.ToString();
+                var find = tableEntries.First(x => x.Value.Replace("MaRe", "").TrimEnd('\0') == comment);
+                int index = tableEntries.ToList().IndexOf(find);
+                string enumVal = loadedMSBT.FileEncoding.GetString(currLabel.Value);
+                enumVal = new string(enumVal.Where(c => char.IsLetterOrDigit(c)).ToArray());
+                entries[index] = string.Format("\t\t{0}, // {1} \r\n", enumVal, comment);
+            }
+
+            entries[0] = "\t\tNone,\r\n";
+
+            preClass = replaceData(preClass, string.Join("", entries.ToArray()));
+            writeOutFile(outputPath, preClass);
         }
 
         // all ints are column numbers. sB1 = start byte 1, SB2 = start byte 2

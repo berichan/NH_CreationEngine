@@ -41,6 +41,9 @@ namespace NH_CreationEngine
             new char[] { (char)0x000E, '\0', '\0', (char)0x000E, (char)0x0006, (char)0x000A },
             new char[] { (char)0x000E, '\0', '\0', (char)0x000E, (char)0x000E, (char)0x000A },
             new char[] { (char)0x000E, '\0', '\0', (char)0x0010, (char)0x0004, (char)0x000C },
+            new char[] { (char)0x000E, '\0', '\0', (char)0x0010, (char)0x0004, (char)0x000C },
+            new char[] { (char)0x0012, '\0', '\0', (char)0x0004, (char)0x0065, (char)0x006E, (char)0x0006 },
+            new char[] { (char)0x000E, (char)0x0032, (char)0x001D, '\0' },
         };
 
         private const string bodyColorRootName = "text_body_color_";

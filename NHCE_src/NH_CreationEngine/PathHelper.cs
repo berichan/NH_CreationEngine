@@ -91,6 +91,7 @@ namespace NH_CreationEngine
         public static string BCSVItemUnitIconItem = BCSVPath + Path.DirectorySeparatorChar + "ItemUnitIcon.csv";
         public static string BCSVItemKindItem = BCSVPath + Path.DirectorySeparatorChar + "ItemKind.csv";
         public static string BCSVItemSizeItem = BCSVPath + Path.DirectorySeparatorChar + "ItemSize.csv";
+        public static string BCSVHumanAnimItem = BCSVPath + Path.DirectorySeparatorChar + "HumanAnimParam.csv";
 
         /*** SARCS ***/
 
@@ -121,6 +122,9 @@ namespace NH_CreationEngine
         public static string GetBodyPartsNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_BodyParts.msbt";
         public static string GetFabricColorNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_FabricColor.msbt";
         public static string GetFabricPartsNameItem(string lang) => GetItemDirectory(lang, "Remake") + Path.DirectorySeparatorChar + "STR_Remake_FabricParts.msbt";
+        // Reaction
+        public static string GetReactionNameItem(string lang) => GetItemDirectory(lang, "Sp") + Path.DirectorySeparatorChar + "STR_Emoticon.msbt";
+
 
         /*** Scripts ***/
         public const string TemplateRoot = "Template_cs";
@@ -140,7 +144,7 @@ namespace NH_CreationEngine
 
         /*** Hashmaps generated using NH_Sysbot_Tools or dumped from game files, or made by me meticulously ***/
         public const string DumpFileRoot = "DumpFiles";
-        public static string MainIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "mainIcon.berimap";
+        public static string MainIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "mainIcon2.berimap";
         public static string SizeDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "size.berimap";
         public static string UnitIconDumpName = DumpFileRoot + Path.DirectorySeparatorChar + "unitIcon.berimap";
         public static string MasterTranslator = DumpFileRoot + Path.DirectorySeparatorChar + "translationtextmaster.txt";

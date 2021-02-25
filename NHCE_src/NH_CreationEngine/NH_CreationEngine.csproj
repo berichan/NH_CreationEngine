@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Template_cs\" />
     <Folder Include="Tools\" />
   </ItemGroup>
 
