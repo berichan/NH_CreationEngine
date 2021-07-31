@@ -10,7 +10,7 @@ namespace NH_CreationEngine
     class Program
     {
         //edit this
-        public const string dumpPath = @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_8_0\"; // should have your romBCSVfs and romSARCfs in it. Use https://github.com/berichan/ACNH_Dumper
+        public const string dumpPath = @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\"; // should have your romBCSVfs and romSARCfs in it. Use https://github.com/berichan/ACNH_Dumper
 
         // Requires you to dump your own menu icon map using sysbot on your switch using the other project in this solution (NH_Sysbot_Tools) and move the berimap file it creates into /NH_CreationEngine/Dumpfiles/mainIcon.berimap 
         // once you get your items filtered you may use my fork of switch toolbox to batch convert textures, this preserves filenames (untick both top options, one of them is creating new folder which you don't need) https://github.com/berichan/Switch-Toolbox
@@ -21,10 +21,11 @@ namespace NH_CreationEngine
             //Util.PrintBigFolders(PathHelper.ModelPath);
 
             //SpriteCreationEngine.GenerateMenuIconList();
-            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_8_0\Output\Sprites\Spritesbfres_menu\proc", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_8_0\Output\Sprites\imagedump_menu.dmp");
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\Output\Sprites\Spritesbfres_menu\new\proc", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\Output\Sprites\imagedump_menu.dmp");
 
             //SpriteCreationEngine.DoItemSearch();
-            SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\Images_Master", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_8_0\Output\Sprites\imagedump.dmp");
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\Images_Master", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\Output\Sprites\imagedump.dmp");
+            //SpriteParser.DumpImagesToSingleFile(@"C:\Users\Strawberry\Documents\clean\NHSE\NHSE.Sprites\Resources\Villagers", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_9_0\Output\Sprites\villagerdump.dmp");
 
             //ModelCreationEngine.DoItemSearchUnitIcon();
 
@@ -35,10 +36,11 @@ namespace NH_CreationEngine
 
             //var watch = System.Diagnostics.Stopwatch.StartNew();
             //BCSVHelper.RedumpBCSV();
-            //BCSVHelper.CreateMenuIconParam(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_7_0\romBCSVfs\Bcsv\text\menuicon.txt");
+            //BCSVHelper.CreateMenuIconParam(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\romBCSVfs\Bcsv\text\menuicon.txt");
             //DoEverything();
             //watch.Stop();
             //Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
+            //FindUntakeableDIYs();
         }
 
         static void DoEverything()
@@ -59,6 +61,27 @@ namespace NH_CreationEngine
             ClassCreationEngine.CreateRemakeUtil();
             ClassCreationEngine.CreateRecipeUtil();
             ClassCreationEngine.CreateMenuIcon();
+        }
+
+        static void FindUntakeableDIYs()
+        {
+            var table = TableProcessor.LoadTable(PathHelper.BCSVRecipeItem, (char)9, 20);
+            string lines = string.Empty;
+            foreach (DataRow row in table.Rows)
+            {
+                string extract = row["0x3CCCA419"].ToString().Replace("\0", string.Empty);
+                if (extract == "0")
+                    continue;
+                string extractID = row["0x54706054"].ToString();
+                ushort recipeID = ushort.Parse(extractID);
+                var recipe = new Item(Item.DIYRecipe);
+                recipe.Count = recipeID;
+
+                var recipeName = GameInfo.Strings.GetItemName(recipe).Replace("(DIY recipe) - ", string.Empty);
+                lines += recipeName + "\r\n";
+            }
+
+            File.WriteAllText(PathHelper.OutputPath + Path.DirectorySeparatorChar + "BadDIYs.txt", lines);
         }
 
         static void ConvertVillagers(string inPath, string outPath)
@@ -118,6 +141,29 @@ namespace NH_CreationEngine
             // print loaded items
             foreach (string itm in foundItems)
                 Console.WriteLine(toLookFor + " is " + itm);
+        }
+
+        class ItemData
+        {
+            public string name, color, hex, diy;
+        }
+
+        static void CreateMarkdownTable(string outputPath)
+        {
+            var itemList = NHSE.Core.GameInfo.Strings.itemlist;
+            List<ItemData> items = new List<ItemData>();
+
+            foreach (var it in itemList)
+            {
+                if (!string.IsNullOrWhiteSpace(it))
+                {
+                    ItemData i = new ItemData();
+                    if (it.Contains('(') && (!it.StartsWith('(')))
+                    {
+
+                    }
+                }
+            }
         }
     }
 }

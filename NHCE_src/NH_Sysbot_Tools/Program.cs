@@ -193,12 +193,20 @@ namespace NH_Sysbot_Tools
             HashmapDumper.SendRawEncoded($"tap 450 480", false, false);
             HashmapDumper.SendRawEncoded($"tap 450 540", false, false);
             HashmapDumper.SendRawEncoded($"tap 450 540", false, false);*/
+            /*HashmapDumper.sb.IP = "192.168.0.132";
+            HashmapDumper.SendRawEncoded($"click a", false, true);
 
-            var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_8_0\RawDumps\UnitIcon.Dmp");
+            while (true)
+            {
+                HashmapDumper.SendRawEncoded($"click a", false, false);
+                Thread.Sleep(300);
+            }*/
+
+            var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\RawDumps\UnitIcon.Dmp");
             string outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + unitIconMapName;
             writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
 
-            dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_8_0\RawDumps\MenuIcon.Dmp");
+            dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\RawDumps\MenuIcon.Dmp");
             outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
             writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
         }
