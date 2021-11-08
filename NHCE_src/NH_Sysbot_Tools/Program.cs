@@ -202,11 +202,11 @@ namespace NH_Sysbot_Tools
                 Thread.Sleep(300);
             }*/
 
-            var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\RawDumps\UnitIcon.Dmp");
+            var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\RawDumps\UnitIcon.Dmp");
             string outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + unitIconMapName;
             writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
 
-            dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_1_11_0\RawDumps\MenuIcon.Dmp");
+            dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\RawDumps\MenuIcon.Dmp");
             outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
             writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
         }

@@ -118,7 +118,7 @@ namespace NH_CreationEngine
                 return string.Empty;
 
             // get the menu icon hash
-            string iconHash = itemRow[28].ToString().Replace("\0", string.Empty);
+            string iconHash = itemRow["0x348D7B06"].ToString().Replace("\0", string.Empty);
             int rowNum = menuIconMap[iconHash];
             var menuIconRowNeeded = menuIconTable.Rows[rowNum];
             string menuIconFilename = MenuSpriteFileRoot + menuIconRowNeeded[3].ToString().Replace("\0", string.Empty) + ".";
@@ -303,7 +303,7 @@ namespace NH_CreationEngine
                 string itemId = row["0x54706054"].ToString();
 
                 // get the menu icon hash
-                string iconHash = row[28].ToString().Replace("\0", string.Empty);
+                string iconHash = row["0x348D7B06"].ToString().Replace("\0", string.Empty);
                 int rowNum = menuIconMap[iconHash];
                 var menuIconRowNeeded = menuIconTable.Rows[rowNum];
                 string menuIconFilename = MenuSpriteFileRoot + menuIconRowNeeded[3].ToString().Replace("\0", string.Empty) + ".";

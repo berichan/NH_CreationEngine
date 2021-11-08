@@ -14,6 +14,7 @@ namespace NH_CreationEngine
         {
             new char[] { (char)0x000E, (char)0x0032, (char)0x000A, (char)0x0010, (char)0x0006, (char)0x0064, (char)0x0065, (char)0x0020, (char)0x0006, (char)0x0064, (char)0x0027, (char)0x2060, (char)0x000E, (char)0x006E, (char)0x001E, (char)0x0000 }, // fr
             new char[] { (char)0x000A, '\0', '\0', '\0', (char)0x0002, (char)0x0073 }, // de
+            new char[] { (char)0x000E, (char)0x0032, (char)0x0016, (char)0x000A, '\0', '\0', (char)0x0002, (char)0x006e },
             new char[] { (char)0x000E, (char)0x0032, (char)0x0016 },
             new char[] { (char)0x0014, '\0', (char)0x0004, (char)0x0065, (char)0x006E, (char)0x0004, (char)0x0065, (char)0x006E, (char)0x0004, (char)0x0065, (char)0x006E },
             new char[] { (char)0x000C, '\0', '\0', '\0', (char)0x0004, (char)0x0065, (char)0x0073 },

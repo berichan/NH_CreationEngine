@@ -20,10 +20,11 @@ namespace NH_CreationEngine
                 .ToList()
                 .ForEach(x => dt.Columns.Add(x.Trim()));
 
-            rawValList.Skip(1)
+            var list = rawValList.Skip(1)
                 .Select(x => x.Split(splitter))
-                .ToList()
-                .ForEach(line => dt.Rows.Add(line));
+                .ToList();
+
+            list.ForEach(line => dt.Rows.Add(line));
 
             if (dt.Columns.Contains(key))
                 dt.PrimaryKey = new DataColumn[1] { dt.Columns[key] };

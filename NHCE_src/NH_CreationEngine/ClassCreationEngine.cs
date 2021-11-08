@@ -155,7 +155,7 @@ namespace NH_CreationEngine
 
         public static void CreateRecipeUtil()
         {
-            var table = TableProcessor.LoadTable(PathHelper.BCSVRecipeItem, (char)9, 20); // ascending key
+            var table = TableProcessor.LoadTable(PathHelper.BCSVRecipeItem, (char)9, 21); // ascending key
             string templatePath = PathHelper.GetFullTemplatePathTo(itemRecipeRootName);
             string outputPath = PathHelper.GetFullOutputPathTo(templatePath);
             string preClass = File.ReadAllText(templatePath);

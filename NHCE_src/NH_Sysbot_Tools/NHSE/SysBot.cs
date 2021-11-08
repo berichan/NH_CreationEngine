@@ -5,7 +5,7 @@ namespace NHSE.Injection
 {
     public class SysBot : IRAMReadWriter
     {
-        public string IP = "192.168.0.107";
+        public string IP = "192.168.0.132";
         public int Port = 6000;
         public Socket Connection = new Socket(SocketType.Stream, ProtocolType.Tcp);
         public bool Connected { get; private set; }
