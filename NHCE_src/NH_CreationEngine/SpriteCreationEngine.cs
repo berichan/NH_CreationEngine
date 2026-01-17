@@ -105,7 +105,7 @@ namespace NH_CreationEngine
             if (fullFilename.Length > 1)
             {
                 Console.WriteLine("[WARNING] {0} has multiple file icons, we're gonna just pick the first one.", toSearchFor);
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
                 return fullFilename[0];
             }
             else if (fullFilename.Length == 1)

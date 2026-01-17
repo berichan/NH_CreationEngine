@@ -159,7 +159,7 @@ namespace NH_Sysbot_Tools
         static string outputMainPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
         // Edit this with your switch's IP and Socket
-        public static string IP = "192.168.0.107";
+        public static string IP = "192.168.0.118";
         public static int Port = 6000;
 
         public static void Main(string[] args)
@@ -169,9 +169,13 @@ namespace NH_Sysbot_Tools
 
             HashmapDumper.sb.IP = IP; HashmapDumper.sb.Port = Port;
 
-            //var dictionaryMainIcon = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetMainIcon);
-            //string outputPathFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
-            //writeoutDictionary(dictionaryMainIcon, outputPathFull);
+            var dictionaryMainIcon = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetMainIcon);
+            string outputPathFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
+            writeoutDictionary(dictionaryMainIcon, outputPathFull);
+
+            /*var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(HashmapDumper.offsetSizeMap);
+            string outputPathFull = outputMainPath + Path.DirectorySeparatorChar + unitIconMapName;
+            writeoutDictionary(dictionaryUnitIcon, outputPathFull);*/
 
             //HashmapDumper.PrintMainPlusOffset(0x396F5A0, 8);
             //HashmapDumper.SendRawEncoded($"configure pollRate 34");
@@ -202,13 +206,13 @@ namespace NH_Sysbot_Tools
                 Thread.Sleep(300);
             }*/
 
-            var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\RawDumps\UnitIcon.Dmp");
+            /*var dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\RawDumps\UnitIcon.Dmp");
             string outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + unitIconMapName;
             writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
 
             dictionaryUnitIcon = HashmapDumper.GetMainInventoryIconHashmap(@"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\RawDumps\MenuIcon.Dmp");
             outputPathUnitFull = outputMainPath + Path.DirectorySeparatorChar + mainIconMapName;
-            writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);
+            writeoutDictionary(dictionaryUnitIcon, outputPathUnitFull);*/
         }
 
         public static void SendKeyCommand(bool connect, params HidKeyboardKey[] keys)

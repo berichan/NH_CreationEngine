@@ -24,7 +24,13 @@ namespace NH_CreationEngine
                 .Select(x => x.Split(splitter))
                 .ToList();
 
-            list.ForEach(line => dt.Rows.Add(line));
+
+            for (int i = 0; i < list.Count; ++i)
+            {
+                var line = list[i];
+                dt.Rows.Add(line);
+            }
+            //list.ForEach(line => dt.Rows.Add(line));
 
             if (dt.Columns.Contains(key))
                 dt.PrimaryKey = new DataColumn[1] { dt.Columns[key] };

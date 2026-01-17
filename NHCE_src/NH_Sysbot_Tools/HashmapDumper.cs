@@ -11,8 +11,8 @@ namespace NH_Sysbot_Tools
     public static class HashmapDumper
     {
         public static SysBot sb = new SysBot();
-        public static ulong offsetMainIcon = 0x3920C00;
-        public static ulong offsetSizeMap = offsetMainIcon + 0xF4D0;
+        public static ulong offsetMainIcon = 0x5214470;
+        public static ulong offsetSizeMap = offsetMainIcon + 0xB610;
 
         static object _sync = new object();
 
@@ -63,13 +63,13 @@ namespace NH_Sysbot_Tools
 
                 while (true)
                 {
-                    KeyValuePair<string, int> newVal = PullKVP(mainIconAddress);
+                    KeyValuePair<string, int> newVal = PullKVP(mainIconAddress + 4);
                     if (!isHashMapBoundary(newVal))
                         builtDic.Add(newVal.Key, newVal.Value);
                     else
                         break;
 
-                    Thread.Sleep(100);
+                    Thread.Sleep(1);
                     mainIconAddress += 8;
                     itemsRead++;
                     Console.WriteLine("Items read: " + itemsRead.ToString());
@@ -229,7 +229,7 @@ namespace NH_Sysbot_Tools
 
         private static bool isHashMapBoundary(KeyValuePair<string, int> toCheck)
         {
-            return (toCheck.Key == "0x00000001" && toCheck.Value == 0) || (toCheck.Key == "0x00000000" && toCheck.Value == 1);
+            return (toCheck.Key == "0x00000101" && toCheck.Value == 0) || (toCheck.Key == "0x00000000" && toCheck.Value == 0);
         }
     }
 }
