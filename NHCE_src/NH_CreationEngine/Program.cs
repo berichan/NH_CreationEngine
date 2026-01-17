@@ -23,24 +23,24 @@ namespace NH_CreationEngine
             //SpriteCreationEngine.GenerateMenuIconList();
             //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\Output\Sprites\Spritesbfres_menu\proc", @"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\Output\Sprites\imagedump_menu.dmp");
 
-            SpriteCreationEngine.DoItemSearch();
+            //SpriteCreationEngine.DoItemSearch();
             //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\Images_Master", @"D:\Switch\ACNH\Unpackv2\patched_acnh_3_0_0\Output\Sprites\imagedump.dmp");
-            //SpriteParser.DumpImagesToSingleFile(@"C:\Users\Strawberry\Documents\clean\NHSE\NHSE.Sprites\Resources\Villagers", @"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\Output\Sprites\villagerdump.dmp");
+            //SpriteParser.DumpImagesToSingleFile(@"C:\Users\Strawberry\Documents\Projects\NHSE\NHSE.Sprites\Resources\Villagers", @"D:\Switch\ACNH\Unpackv2\patched_acnh_3_0_0\Output\Sprites\villagerdump.dmp");
 
             //ModelCreationEngine.DoItemSearchUnitIcon();
 
             //PointerCreationEngine.GenerateUnitIconPointer();
-            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\Images_UnitIcon_Master", @"D:\Switch\ACNH\Unpackv2\patched_acnh_1_4_0\Output\Sprites\imagedump_manual.dmp");
+            //SpriteParser.DumpImagesToSingleFile(@"D:\Switch\ACNH\Unpackv2\Images_UnitIcon_Master", @"D:\Switch\ACNH\Unpackv2\patched_acnh_3_0_0\Output\Sprites\imagedump_manual.dmp");
 
             //ClassCreationEngine.CreateReaction();
 
-            //var watch = System.Diagnostics.Stopwatch.StartNew();
-            //BCSVHelper.RedumpBCSV();
-            //BCSVHelper.CreateMenuIconParam(@"D:\Switch\ACNH\Unpackv2\patched_acnh_2_0_0\romBCSVfs\Bcsv\text\menuicon.txt");
-            //DoEverything();
-            //watch.Stop();
-            //Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
-            //FindUntakeableDIYs();
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            BCSVHelper.RedumpBCSV();
+            BCSVHelper.CreateMenuIconParam(@"D:\Switch\ACNH\Unpackv2\patched_acnh_3_0_0\romBCSVfs\Bcsv\text\menuicon.txt");
+            DoEverything();
+            watch.Stop();
+            Console.WriteLine(string.Format("All files written in {0}ms", watch.ElapsedMilliseconds));
+            FindUntakeableDIYs();
 
             //ConvertVHouses(@"C:\Users\Strawberry\Downloads\NHSE-4cad6f589437a687c854f5e91dfabfd399687e49\NHSE-4cad6f589437a687c854f5e91dfabfd399687e49\NHSE.Villagers\Resources\Houses", @"C:\Users\Strawberry\Downloads\NHSE-4cad6f589437a687c854f5e91dfabfd399687e49\NHSE-4cad6f589437a687c854f5e91dfabfd399687e49\NHSE.Villagers\Resources\Houses\fix");
         }
