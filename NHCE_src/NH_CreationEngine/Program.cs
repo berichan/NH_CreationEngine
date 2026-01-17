@@ -67,7 +67,7 @@ namespace NH_CreationEngine
 
         static void FindUntakeableDIYs()
         {
-            var table = TableProcessor.LoadTable(PathHelper.BCSVRecipeItem, (char)9, 21);
+            var table = TableProcessor.LoadTable(PathHelper.BCSVRecipeItem, (char)9, 23);
             string lines = string.Empty;
             var recipeItems = new List<Item>();
             foreach (DataRow row in table.Rows)
@@ -107,25 +107,6 @@ namespace NH_CreationEngine
                     Villager2 v2 = new Villager2(VillagerConverter.Convert12(villager));
                     File.WriteAllBytes(Path.Combine(outPath, file.Name), v2.Data);
                 }
-            }
-        }
-
-        static void ConvertVHouses(string inPath, string outPath, string ext = ".bin")
-        {
-            if (!Directory.Exists(outPath))
-                Directory.CreateDirectory(outPath);
-
-            DirectoryInfo di = new DirectoryInfo(inPath);
-            FileInfo[] files = di.GetFiles();
-
-            int expect = VillagerHouse2.SIZE;
-
-            foreach (var file in files)
-            {
-                var house = File.ReadAllBytes(file.FullName);
-                VillagerHouse1 vh1 = new VillagerHouse1(house);
-                VillagerHouse2 vh2 = new VillagerHouse2(VillagerHouseConverter.GetCompatible(vh1.Data, expect));
-                File.WriteAllBytes(Path.Combine(outPath, Path.GetFileNameWithoutExtension(file.Name) + ext), vh2.Data);
             }
         }
 

@@ -155,7 +155,7 @@ namespace NH_CreationEngine
 
         public static void CreateRecipeUtil()
         {
-            var table = TableProcessor.LoadTable(PathHelper.BCSVRecipeItem, (char)9, 21); // ascending key
+            var table = TableProcessor.LoadTable(PathHelper.BCSVRecipeItem, (char)9, 23); // ascending key
             string templatePath = PathHelper.GetFullTemplatePathTo(itemRecipeRootName);
             string outputPath = PathHelper.GetFullOutputPathTo(templatePath);
             string preClass = File.ReadAllText(templatePath);
@@ -164,8 +164,8 @@ namespace NH_CreationEngine
             List<string> varIndexes = new List<string>();
             foreach (DataRow row in table.Rows)
             {
-                string extract = row[20].ToString(); // index
-                string extractItemId = row[12].ToString();
+                string extract = row[23].ToString(); // index
+                string extractItemId = row[15].ToString();
                 int recipeIndex = int.Parse(extract);
                 extract = "0x" + recipeIndex.ToString("X3");
                 string inserter = "{" + extract + ", " + extractItemId.PadLeft(5, '0') + @"}, // " + ItemCreationEngine.ItemLines[int.Parse(extractItemId) + 1];
@@ -193,7 +193,7 @@ namespace NH_CreationEngine
             ItemRemakePointer = new Dictionary<string, string>();
             foreach (DataRow row in table.Rows)
             {
-                string extract = buildDicEntryFromDataRow(row, 18, 20, 38, 22, 39, 41);
+                string extract = buildDicEntryFromDataRow(row, 18, 20, 38, 22, 40, 42);
                 ItemRemakePointer.Add(row[20].ToString(), row[18].ToString());
                 extract = extract.Replace("\0", string.Empty);//  + "\r\n"; we don't need rn because the item list has it at the end of each entry and we use it to comment
                 for (int i = 0; i < tabCount; ++i)
